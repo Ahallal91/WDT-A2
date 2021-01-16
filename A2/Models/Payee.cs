@@ -18,15 +18,16 @@ namespace A2.Models
         public string Address { get; set; }
         [StringLength(40)]
         public string City { get; set; }
-        [RegularExpression(@"^(?-i:NSW|QLD|SA|TAS|VIC)$", ErrorMessage = "Enter a valid State")]
+        [RegularExpression(@"^(?-i:NSW|QLD|SA|TAS|VIC)?$", ErrorMessage = "Enter a valid State.")]
         [StringLength(20)]
         public string State { get; set; }
-        [RegularExpression(@"^\d{4}$", ErrorMessage = "Enter a valid 4 digit Postcode")]
+        [RegularExpression(@"^\d{4}?$", ErrorMessage = "Enter a valid 4 digit Postcode.")]
         [StringLength(10)]
         public string PostCode { get; set; }
         [Required]
         [RegularExpression(@"^[+]?(61)\s\d{4}\s\d{4}$", ErrorMessage = "Enter a valid phone number.")]
         [StringLength(15)]
         public string Phone { get; set; }
+        public virtual List<BillPay> BillPay { get; set; }
     }
 }

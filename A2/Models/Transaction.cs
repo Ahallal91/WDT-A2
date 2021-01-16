@@ -30,9 +30,10 @@ namespace A2.Models
         public int? DestAccount { get; set; }
         public virtual Account DestAccount { get; set; }
         [Column(TypeName = "money")]
-        public decimal Amount { get; set; }
+        [DataType(DataType.Currency)]
+        public decimal? Amount { get; set; }
         [StringLength(255)]
         public string Comment { get; set; }
-        public DateTime ModifyDate { get; set; }
+        public DateTime? ModifyDate { get; set; }
     }
 }

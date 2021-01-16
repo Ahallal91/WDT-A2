@@ -26,6 +26,10 @@ namespace A2.Models
         public int PayeeID { get; set; }
         public virtual Payee PayeeIDNo { get; set; }
         [Required]
+        [Column(TypeName = "money")]
+        [DataType(DataType.Currency)]
+        public decimal Amount { get; set; }
+        [Required]
         public DateTime ScheduleDate { get; set; }
         [Required]
         [StringLength(1)]
