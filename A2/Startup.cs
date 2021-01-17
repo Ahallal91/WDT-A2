@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace A2
 {
+    /// <summary>
+    /// References  McbaLoginWithExample: week 6 start up file.
+    /// </summary>
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -30,9 +33,17 @@ namespace A2
                 options.UseSqlServer(Configuration.GetConnectionString(nameof(A2Context)));
 
                 // Enable lazy loading.
-                options.Lazy
+                options.UseLazyLoadingProxies();
+            });
+            // Store session into Web-Server memory.
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                // Make the session cookie essential.
+                options.Cookie.IsEssential = true;
             });
 
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

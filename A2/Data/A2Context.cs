@@ -11,7 +11,9 @@ namespace A2.Data
     {
         public A2Context(DbContextOptions<A2Context> options) : base(options)
         { }
-
+        public DbSet<Login> Login { get; set; }
+        /*        public DbSet<Account> Payee { get; set; }
+                public DbSet<Customer> Transaction { get; set; }*/
         public DbSet<BillPay> BillPay { get; set; }
         public DbSet<Payee> Payee { get; set; }
         public DbSet<Transaction> Transaction { get; set; }
