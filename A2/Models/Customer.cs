@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace s3811836_a2.Models
+namespace A2.Models
 {
     public class Customer
     {
@@ -15,7 +18,7 @@ namespace s3811836_a2.Models
         [StringLength(50)]
         public string CustomerName { get; set; }
 
-        [RegularExpression ("[0-9]\\d{10}", ErrorMessage = "Enter a valid 11 digit TFN.")]
+        [RegularExpression("[0-9]\\d{10}", ErrorMessage = "Enter a valid 11 digit TFN.")]
         [StringLength(20)]
         public string TFN { get; set; }
 
@@ -23,8 +26,8 @@ namespace s3811836_a2.Models
         public string Address { get; set; }
 
 
-        [StringLength (30)]
-        [RegularExpression ("^[A-Z][a-z]+$", ErrorMessage = "Enter a valid city")]
+        [StringLength(30)]
+        [RegularExpression("^[A-Z][a-z]+$", ErrorMessage = "Enter a valid city")]
         public string City { get; set; }
 
         [RegularExpression(@"^(?-i:NSW|QLD|SA|TAS|VIC)$", ErrorMessage = "Enter a valid state")]
