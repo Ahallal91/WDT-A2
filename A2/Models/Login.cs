@@ -8,10 +8,12 @@ namespace A2.Models
     public class Login
     {
         [Required, StringLength(8)]
+        [RegularExpression(@"^\d{8}?$", ErrorMessage = "LoginID must be 8 digits.")]
         [Display(Name = "Login ID")]
         public string LoginID { get; set; }
 
         [Required]
+        [ForeignKey("Customer")]
         public int CustomerID { get; set; }
         public virtual Customer Customer { get; set; }
 
