@@ -16,13 +16,14 @@ namespace A2.Controllers
         private readonly A2Context _context;
         public LoginController(A2Context context) => _context = context;
         public IActionResult Login() => View();
+
         [HttpPost]
         public async Task<IActionResult> Login(string loginID, string password)
         {
             var login = await _context.Login.FindAsync(loginID);
             if (login == null || !PBKDF2.Verify(login.PasswordHash, password))
             {
-                ModelState.AddModelError("LoginFailed", "Login failed, please try again.");
+                ModelState.AddModelError("LoginFailed", "Invalid LoginID or password, please try again.");
                 return View(new Login { LoginID = loginID });
             }
 
@@ -31,6 +32,15 @@ namespace A2.Controllers
             HttpContext.Session.SetString(nameof(Customer.CustomerName), login.Customer.CustomerName);
 
             return RedirectToAction("Index", "Customer");
+        }
+
+        [Route("LogoutNow")]
+        public IActionResult Logout()
+        {
+            // Logout customer.
+            HttpContext.Session.Clear();
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }
