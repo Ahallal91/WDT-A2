@@ -32,7 +32,7 @@ namespace A2.Data
                  HasOne(x => x.Customer).WithMany(x => x.Accounts).HasForeignKey(x => x.CustomerID);
             builder.Entity<BillPay>().
                 HasOne(x => x.Account).WithMany(x => x.BillPay).HasForeignKey(x => x.AccountNumber);
-            builder.Entity<BillPay>().HasOne(x => x.PayeeIDNo).WithMany(x => x.BillPay).HasForeignKey(x => x.PayeeIDNo);
+            builder.Entity<BillPay>().HasOne(x => x.Payee).WithMany(x => x.BillPay).HasForeignKey(x => x.PayeeID);
             builder.Entity<Transaction>().
                 HasOne(x => x.Account).WithMany(x => x.Transactions).HasForeignKey(x => x.AccountNumber);
         }

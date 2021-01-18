@@ -1,4 +1,6 @@
 ﻿using A2.Data;
+using A2.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SimpleHashing;
 using System;
@@ -15,18 +17,18 @@ namespace A2.Controllers
         public LoginController(A2Context context) => _context = context;
         public IActionResult Login() => View();
         [HttpPost]
-        public async IActionResult Login(string loginID, string password)
+        public async Task<IActionResult> Login(string loginID, string password)
         {
             var login = await _context.Login.FindAsync(loginID);
             if (login == null || !PBKDF2.Verify(login.PasswordHash, password))
             {
-                ModelState.AddModelError("LoginFailed", "Your details are incorrect, please try again.");
-                return;
+                ModelState.AddModelError("LoginFailed", "Login failed, please try again.");
+                return View(new Login { LoginID = loginID });
             }
 
-            // Customers details accepted, create session.
+            // Login customer.
             HttpContext.Session.SetInt32(nameof(Customer.CustomerID), login.CustomerID);
-            HttpContext.Session.SetString(nameof(Customer.Name), login.Customer.Name);
+            HttpContext.Session.SetString(nameof(Customer.CustomerName), login.Customer.CustomerName);
 
             return RedirectToAction("Index", "Customer");
         }

@@ -7,27 +7,19 @@ using System.Threading.Tasks;
 
 namespace A2.Models
 {
-    public enum TransactionType
-    {
-        Deposit = 'D',
-        Withdraw = 'W',
-        Transfer = 'T',
-        ServiceCharge = 'S',
-        BillPay = 'B'
-    };
     public class Transaction
     {
         [Required]
         public int TransactionID { get; set; }
         [Required]
         [StringLength(1)]
-        public TransactionType TransactionType { get; set; }
+        public string TransactionType { get; set; }
         [Required]
         [ForeignKey("Account")]
         public int AccountNumber { get; set; }
         public virtual Account Account { get; set; }
         [ForeignKey("DestinationAccount")]
-        public int? DestAccount { get; set; }
+        public int? DestinationAccount { get; set; }
         public virtual Account DestAccount { get; set; }
         [Column(TypeName = "money")]
         [DataType(DataType.Currency)]

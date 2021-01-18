@@ -6,18 +6,15 @@ using System.Transactions;
 
 namespace A2.Models
 {
-    public enum AccountType
-    {
-        Savings = 'S',
-        Checking = 'C'
-    };
     public class Account
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Display(Name = "Account Number")]
         public int AccountNumber { get; set; }
+        [Required]
+        [StringLength(1)]
         [Display(Name = "Type")]
-        public AccountType AccountType { get; set; }
+        public string AccountType { get; set; }
         [Required]
         [ForeignKey("Customer")]
         public int CustomerID { get; set; }

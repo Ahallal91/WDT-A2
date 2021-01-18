@@ -33,6 +33,6 @@ namespace A2.Models
         [RegularExpression(@"^[+]?(61)\s\d{4}\s\d{4}$", ErrorMessage = "Enter a valid phone number.")]
         [StringLength(15)]
         public string Phone { get; set; }
-        public List<Account> Accounts { get; set; }
+        public virtual List<Account> Accounts { get; set; }
     }
 }

@@ -7,12 +7,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace A2.Models
 {
-    public enum Period
-    {
-        Monthly = 'M',
-        Quarterly = 'Q',
-        OnceOff = 'S'
-    };
     public class BillPay
     {
         [Required]
@@ -24,7 +18,7 @@ namespace A2.Models
         [Required]
         [ForeignKey("PayeeID")]
         public int PayeeID { get; set; }
-        public virtual Payee PayeeIDNo { get; set; }
+        public virtual Payee Payee { get; set; }
         [Required]
         [Column(TypeName = "money")]
         [DataType(DataType.Currency)]
@@ -33,7 +27,7 @@ namespace A2.Models
         public DateTime ScheduleDate { get; set; }
         [Required]
         [StringLength(1)]
-        public Period Period { get; set; }
+        public string Period { get; set; }
         [Required]
         public DateTime ModifyDate { get; set; }
     }
