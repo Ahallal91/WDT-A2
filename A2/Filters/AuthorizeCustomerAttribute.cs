@@ -13,8 +13,8 @@ namespace A2.Filters
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            var custID = context.HttpContext.Session.GetInt32(nameof(Customer.CustomerID));
-            if (!custID.HasValue)
+            var customerID = context.HttpContext.Session.GetInt32(nameof(Customer.CustomerID));
+            if (!customerID.HasValue)
             {
                 context.Result = new RedirectToActionResult("Index", "Home", null);
             }
