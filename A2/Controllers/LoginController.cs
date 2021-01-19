@@ -1,5 +1,6 @@
 ﻿using A2.Data;
 using A2.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SimpleHashing;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace A2.Controllers
 {
-    [Route("/MCBA/CustomerLogin)")]
+    [Route("/MCBA/CustomerLogin")]
     public class LoginController : Controller
     {
         private readonly A2Context _context;
@@ -31,7 +32,7 @@ namespace A2.Controllers
             HttpContext.Session.SetInt32(nameof(Customer.CustomerID), login.CustomerID);
             HttpContext.Session.SetString(nameof(Customer.CustomerName), login.Customer.CustomerName);
 
-            return RedirectToAction("Index", "Customer");
+            return RedirectToAction("Home", "Customer");
         }
 
         [Route("LogoutNow")]
