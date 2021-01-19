@@ -18,7 +18,7 @@ namespace A2.Models
         [ForeignKey("Account")]
         public int AccountNumber { get; set; }
         public virtual Account Account { get; set; }
-        [ForeignKey("DestinationAccount")]
+        [ForeignKey("DestAccount")]
         public int? DestinationAccount { get; set; }
         public virtual Account DestAccount { get; set; }
         [Column(TypeName = "money")]
