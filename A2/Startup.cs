@@ -39,6 +39,8 @@ namespace A2
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
+                // Times out user after 5 minutes of inactivity.
+                options.IdleTimeout = TimeSpan.FromMinutes(5);
                 // Make the session cookie essential.
                 options.Cookie.IsEssential = true;
             });

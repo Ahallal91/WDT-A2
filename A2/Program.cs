@@ -24,10 +24,10 @@ namespace A2
                 {
                     WebService.Initialize(services);
                 }
-                catch (Exception ex)
+                catch (Exception e)
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred seeding the DB.");
+                    logger.LogError(e, "An error occured contacting the webservice.");
                 }
             }
 
