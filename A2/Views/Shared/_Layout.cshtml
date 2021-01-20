@@ -1,4 +1,7 @@
-﻿@using Microsoft.AspNetCore.Http
+﻿@*
+    Reference: MCBAExampleWithLogin Index.cshtml week 6
+*@
+@using Microsoft.AspNetCore.Http
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,35 +16,47 @@
     <header class="mb-5">
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar navbar-dark bg-dark">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MCBA Online Banking</a>
+                @{
+                    var isLoggedIn = Context.Session.GetInt32(nameof(Customer.CustomerID)).HasValue;
+                }
+                @if (isLoggedIn)
+                {
+                    <a class="navbar-brand" asp-area="" asp-controller="Customer" asp-action="Home">MCBA Online Banking</a>
+                }
+                else
+                {
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MCBA Online Banking</a>
+                }
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav ml-auto">
-                        @{
-                            var isLoggedIn = Context.Session.GetInt32(nameof(Customer.CustomerID)).HasValue;
-                        }
                         @if (isLoggedIn)
                         {
                             <li class="nav-item">
-                                <span class="nav-link text-dark">
+                                <span class="nav-link text-light">
                                     Welcome, @Context.Session.GetString(nameof(Customer.CustomerName))
                                 </span>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light center" asp-area="" asp-controller="Customer" asp-action="Home"><i class="bi bi-house-door-fill"></i> Home</a>
+                            </li>
                         }
-                        <li class="nav-item">
-                            <a class="nav-link text-light center" asp-area="" asp-controller="Home" asp-action="Index"><i class="bi bi-house-door-fill"></i> Home</a>
-                        </li>
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light center" asp-area="" asp-controller="Home" asp-action="Index"><i class="bi bi-house-door-fill"></i> Home</a>
+                            </li>
+                        }
                         <li class="nav-item pr-3">
                             <a class="nav-link text-light center" asp-area="" asp-controller="Home" asp-action="Privacy"><i class="bi bi-shield-lock-fill"></i> Privacy</a>
                         </li>
-
                         @if (isLoggedIn)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-light btn btn-danger" asp-controller="Login" asp-action="Logout"><i class="bi bi-box-arrow-in-left"></i> Logout</a>
+                                <a class="nav-link text-light btn btn-success" asp-controller="Login" asp-action="Logout"><i class="bi bi-box-arrow-in-left"></i> Logout</a>
                             </li>
                         }
                         else
