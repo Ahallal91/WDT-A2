@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace A2.Models
 {
-    public class Login
+    public record Login
     {
         [Required, StringLength(8)]
         [RegularExpression(@"^\d{8}?$", ErrorMessage = "LoginID must be 8 digits.")]

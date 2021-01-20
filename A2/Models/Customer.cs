@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace A2.Models
 {
-    public class Customer
+    public record Customer
     {
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
