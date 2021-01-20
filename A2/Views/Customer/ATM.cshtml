@@ -2,33 +2,66 @@
     Reference: MCBAExampleWithLogin Deposit.cshtml week 6
 *@
 @using Microsoft.AspNetCore.Http
-@model Account
+@model Customer
 @{
     ViewData["Title"] = "ATM";
 }
-<h1 class="display-4">ATM</h1>
-<g4>Account Number:  @Model.AccountNumber (@Model.AccountType)</g4>
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Deposit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<h1 class="display-4 text-center">ATM</h1>
+<div class="row mt-3">
+    <div class="col-md-6 offset-md-3">
+        <form asp-action="ATMTransaction">
             <div class="form-group">
-                <label for="Amount" class="control-label"></label>
+                <label for="transactionType" class="form-label">Please select your Account:</label>
+                <select onchange="onSelectEventHandler()" class="form-select form-control" name="transactionType" id="transactionType" aria-label="Default select example">
+                    <option selected value="Withdraw">Withdraw</option>
+                    <option value="Deposit">Deposit</option>
+                    <option value="Transfer">Transfer</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="accountNumber" class="form-label">Please select your Account:</label>
+                <select class="form-select form-control" name="accountNumber" id="accountNumber" aria-label="Default select example">
+
+                    @foreach (var acc in Model.Accounts)
+                    {
+                        <option value=@acc.AccountNumber>@Html.DisplayFor(x => acc.AccountNumber) @Html.DisplayFor(x => acc.AccountType)</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group" id="TransferATM" style="display: none;">
+                <label class="control-label">To Account Number</label>
+                <input id="toAccountNumber" name="toAccountNumber" class="form-control"
+                       data-val="true" data-val-number="The field toAccountNumber must be a number." />
+                @Html.ValidationMessage("AccountError", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <label for="Amount" class="control-label">Amount</label>
                 <input id="Amount" name="Amount" class="form-control" value="@ViewBag.Amount?.ToString("0.00")"
                        data-val="true" data-val-number="The field Amount must be a number."
                        data-val-required="The Amount field is required." />
                 @Html.ValidationMessage("Amount", new { @class = "text-danger" })
             </div>
-            <div class="form-group">
-                <input type="submit" value="Confirm" class="btn btn-primary" />
+            <div class="form-group text-left">
+                <label class="control-label">Comment</label>
+                <input value="" name="comment" id="comment" class="form-control" />
+
+            </div>
+            <div class="form-group text-right">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-wallet2"></i> Process</button>
             </div>
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to Accounts</a>
-</div>
+@*This hides the transaction ID field if the user has selected Withdraw or Deposit*@
+<script>
+    function onSelectEventHandler() {
+        if (document.getElementById('transactionType').value == "Transfer") {
+            document.getElementById('TransferATM').style.display = 'block';
+        } else {
+            document.getElementById('TransferATM').style.display = 'none';
+        }
+    }
+</script>
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }

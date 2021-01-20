@@ -40,7 +40,7 @@ namespace A2
             services.AddSession(options =>
             {
                 // Times out user after 5 minutes of inactivity.
-                options.IdleTimeout = TimeSpan.FromMinutes(5);
+                // options.IdleTimeout = TimeSpan.FromMinutes(5);
                 // Make the session cookie essential.
                 options.Cookie.IsEssential = true;
             });
@@ -63,7 +63,6 @@ namespace A2
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
             app.UseSession();
             app.UseAuthorization();

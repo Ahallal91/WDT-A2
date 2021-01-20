@@ -43,7 +43,7 @@ namespace A2.Controllers.BusinessObject
             string withdrawTransaction = "W";
             if (value > 0)
             {
-                if (ComputeTransation(value, ref account, constraints, constraints.withdrawCharge))
+                if (ComputeTransation(value, account, constraints, constraints.withdrawCharge))
                 {
                     account.Transactions.Add(new Transaction
                     {
@@ -53,6 +53,35 @@ namespace A2.Controllers.BusinessObject
                         Comment = "Withdraw",
                         ModifyDate = DateTime.Now
                     });
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            return account;
+        }
+        public Account Transfer(decimal value, Account account, int toAccountNumber, string comment)
+        {
+            AccountConstraints constraints = new AccountConstraints(account.AccountType);
+            string transferTransaction = "T";
+            if (value > 0)
+            {
+                if (ComputeTransation(value, account, constraints, constraints.transferCharge))
+                {
+                    account.Transactions.Add(new Transaction
+                    {
+                        TransactionType = transferTransaction,
+                        AccountNumber = account.AccountNumber,
+                        DestinationAccount = toAccountNumber,
+                        Amount = value,
+                        Comment = "Transfer",
+                        ModifyDate = DateTime.Now
+                    });
+                }
+                else
+                {
+                    return null;
                 }
             }
             return account;
@@ -95,7 +124,7 @@ namespace A2.Controllers.BusinessObject
         /// <param name="charge">The type of transaction charge to be applied. 
         /// Eg Withdraw transactions have a withdraw charge</param>
         /// <returns> <c>true</c> if Transaction was successful, otherwise <c>false</c>.</returns>
-        private bool ComputeTransation(decimal value, ref Account account, AccountConstraints constraints, decimal charge)
+        private bool ComputeTransation(decimal value, Account account, AccountConstraints constraints, decimal charge)
         {
             bool retValue = false;
             if ((account.Balance - value) >= constraints.MinBalance && InsertPreviousTransactions(account) < constraints.freeTransactionLimit)

@@ -8,7 +8,7 @@ namespace A2.Models
     public record Login
     {
         [Required, StringLength(8)]
-        [RegularExpression(@"^\d{8}?$", ErrorMessage = "LoginID must be 8 digits.")]
+        [RegularExpression(@"^\d{8}?$", ErrorMessage = "Login ID must be 8 digits.")]
         [Display(Name = "Login ID")]
         public string LoginID { get; set; }
 

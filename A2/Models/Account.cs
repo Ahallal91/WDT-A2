@@ -10,6 +10,7 @@ namespace A2.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Display(Name = "Account Number")]
+        [RegularExpression(@"^\d{4}$", ErrorMessage = "Account numbers must be 4 digits")]
         public int AccountNumber { get; set; }
         [Required]
         [StringLength(1)]
