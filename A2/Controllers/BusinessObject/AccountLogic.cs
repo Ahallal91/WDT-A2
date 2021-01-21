@@ -69,6 +69,7 @@ namespace A2.Controllers.BusinessObject
             {
                 if (ComputeTransation(value, account, constraints, constraints.transferCharge))
                 {
+                    toAccountNumber.Balance += value;
                     account.Transactions.Add(new Transaction
                     {
                         TransactionType = transferTransaction,
@@ -105,20 +106,16 @@ namespace A2.Controllers.BusinessObject
             {
                 foreach (var transaction in account.Transactions)
                 {
-                    if (transaction.AccountNumber == account.AccountNumber)
+                    if (transaction.TransactionType == "W")
                     {
-                        if (transaction.TransactionType == "W")
-                        {
-                            freeTransactions++;
-                        }
-                        else if (transaction.TransactionType == "T" && transaction.DestAccount.AccountNumber == 0)
-                        {
-                            freeTransactions++;
-                        }
+                        freeTransactions++;
+                    }
+                    else if (transaction.TransactionType == "T" && transaction.DestinationAccount > 0)
+                    {
+                        freeTransactions++;
                     }
                 }
             }
-            Console.WriteLine(freeTransactions + "got here");
             return freeTransactions;
         }
         /// <summary>
