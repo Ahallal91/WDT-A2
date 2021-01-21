@@ -107,5 +107,15 @@ namespace A2.Controllers
             };
             return View(payBillViewModel);
         }
+        public async Task<IActionResult> PayBillTransaction(int accountNumber, int payeeNo, decimal amount, DateTime scheduledDate, string period)
+        {
+            var customer = await _context.Customer.Include(x => x.Accounts).
+                FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
+            var payBillViewModel = new PayBillViewModel()
+            {
+                Customer = customer,
+            };
+            return View(payBillViewModel);
+        }
     }
 }

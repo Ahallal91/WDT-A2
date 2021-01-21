@@ -10,6 +10,8 @@ namespace A2.ViewModel
     public class PayBillViewModel
     {
         public Customer Customer { get; set; }
+        [RegularExpression(@"^[0-9]*$", ErrorMessage = "PayeeID must be only numbers.")]
+        public string PayeeID { get; set; }
         public string ToAccountNumber { get; set; }
         [DataType(DataType.Currency)]
         [RegularExpression(@"^[0-9]?[0-9]?(\.[0-9][0-9]?)?$", ErrorMessage = "Currency must be greater than zero and to two decimal places.")]
