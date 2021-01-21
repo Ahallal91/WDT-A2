@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 
 namespace A2.Controllers.BusinessObject
 {
+    /// <summary>
+    /// AccountConstraints class provides all constraint values for transaction charges, freeTransactionLimit, and the opening and minimum balances of 
+    /// different account types.
+    /// </summary>
     public class AccountConstraints
     {
         public readonly decimal withdrawCharge = 0.10M;
@@ -34,9 +38,6 @@ namespace A2.Controllers.BusinessObject
                 default:
                     break;
             }
-
-
-
         }
     }
 }
