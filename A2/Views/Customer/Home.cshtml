@@ -13,7 +13,6 @@
                     <th>@Html.DisplayNameFor(x => x.Accounts[0].AccountType)</th>
                     <th>@Html.DisplayNameFor(x => x.Accounts[0].Balance)</th>
                     <th> Statements</th>
-                    <th> ATM</th>
                 </tr>
             </thead>
             <tbody>
@@ -23,8 +22,7 @@
                         <td>@Html.DisplayFor(x => acc.AccountNumber)</td>
                         <td>@Html.DisplayFor(x => acc.AccountType)</td>
                         <td>@Html.DisplayFor(x => acc.Balance)</td>
-                        <td><a class=" btn btn-primary" asp-area="" asp-controller="Home" asp-action="Transaction">View</a></td>
-                        <td><a class=" btn btn-primary" asp-action="ATM" asp-route-id="@acc.AccountNumber">Complete Transaction</a></td>
+                        <td><a class=" btn btn-primary" asp-area="" asp-controller="Home" asp-route-id="@acc.AccountNumber" asp-action="Transaction">View</a></td>
                     </tr>
                 }
             </tbody>

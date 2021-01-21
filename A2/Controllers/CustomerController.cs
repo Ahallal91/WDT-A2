@@ -97,5 +97,15 @@ namespace A2.Controllers
             return RedirectToAction(nameof(Home));
         }
         public async Task<IActionResult> Transaction(int id) => View(await _context.Account.FindAsync(id));
+        public async Task<IActionResult> PayBill()
+        {
+            var customer = await _context.Customer.Include(x => x.Accounts).
+                FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
+            var payBillViewModel = new PayBillViewModel()
+            {
+                Customer = customer,
+            };
+            return View(payBillViewModel);
+        }
     }
 }

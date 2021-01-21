@@ -22,6 +22,7 @@ namespace A2.Models
         [Required]
         [Column(TypeName = "money")]
         [DataType(DataType.Currency)]
+        [RegularExpression(@"^[0-9]?[0-9]?(\.[0-9][0-9]?)?$", ErrorMessage = "Currency must be greater than zero and to two decimal places.")]
         public decimal Amount { get; set; }
         [Required]
         public DateTime ScheduleDate { get; set; }
