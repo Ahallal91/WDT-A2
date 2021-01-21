@@ -10,3 +10,8 @@ Reference: https://devblogs.microsoft.com/dotnet/c-9-0-on-the-record/
 Records were used in the Models for Customer and Login. The advantage for using records for these particular models is it means the Customer and Login objects are passed by value, using less resources in the system, and furthermore ensures that these objects cannot be changed without copying the values of the original object and making a new object. For these particular models there are two main cases where the user might want to change these objects, but they won't happen very often. These are: Updating password, Updating customer contact information such as Address, City etc. All other times when these objects are used in the system, they should never need to be changed. By keeping login and customer information immutable, we can ensure that the objects are only changed when they need to be rather than by accident.
 
 
+
+References:
+MCBALoginWithExample week 6 project (specific areas are referenced in comments of project)
+Alicia Hallal s3811836 Assignment 1 Library 'Utilities' was imported to use in Webservice and validation
+ViewModel reference: https://docs.microsoft.com/en-us/aspnet/core/mvc/views/overview?view=aspnetcore-5.0

@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace A2.Data
 {
+    /*
+     Reference McbaExampleWithLogin McbaContext file week6
+     */
     public class A2Context : DbContext
     {
         public A2Context(DbContextOptions<A2Context> options) : base(options)

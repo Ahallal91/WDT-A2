@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace A2.Filters
 {
+    /*
+     * Reference McbaExampleWithLogin AuthorizeCustomerAttribute.cs week 6
+     */
     public class AuthorizeCustomerAttribute : Attribute, IAuthorizationFilter
     {
         public void OnAuthorization(AuthorizationFilterContext context)
