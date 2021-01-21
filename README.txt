@@ -15,3 +15,4 @@ References:
 MCBALoginWithExample week 6 project (specific areas are referenced in comments of project)
 Alicia Hallal s3811836 Assignment 1 Library 'Utilities' was imported to use in Webservice and validation
 ViewModel reference: https://docs.microsoft.com/en-us/aspnet/core/mvc/views/overview?view=aspnetcore-5.0
+Piggy Bank image: https://undraw.co

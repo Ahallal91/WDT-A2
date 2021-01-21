@@ -6,9 +6,11 @@
 @{
     ViewData["Title"] = "ATM";
 }
-<h1 class="display-4 text-center">ATM</h1>
-<div class="row mt-3">
-    <div class="col-md-6 offset-md-3">
+<img src="~/images/transfer.svg" asp-append-version="true" style="z-index: -1; position: absolute;">
+
+<div class="row mt-3 ">
+    <div class="col-md-6 offset-md-3 px-5 py-5 my-5 rounded text-light bg-dark">
+        <h1 class="display-4 text-left pb-3">ATM</h1>
         <form asp-action="ATMTransaction">
             <div class="form-group">
                 <label for="transactionType" class="form-label">Please select your Account:</label>

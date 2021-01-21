@@ -6,6 +6,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Include="wwwroot\images\homebank.png" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="5.0.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.2" />

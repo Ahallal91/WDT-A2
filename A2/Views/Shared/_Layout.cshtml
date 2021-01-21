@@ -19,6 +19,7 @@
                 @{
                     var isLoggedIn = Context.Session.GetInt32(nameof(Customer.CustomerID)).HasValue;
                 }
+                <img src="~/images/headerwhite.svg" height="50" width="50" asp-append-version="true">
                 @if (isLoggedIn)
                 {
                     <a class="navbar-brand" asp-area="" asp-controller="Customer" asp-action="Home">MCBA Online Banking</a>
@@ -59,7 +60,7 @@
                         @if (isLoggedIn)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-light btn btn-success" asp-controller="Login" asp-action="Logout"><i class="bi bi-box-arrow-in-left"></i> Logout</a>
+                                <a class="nav-link text-light btn btn-secondary" asp-controller="Login" asp-action="Logout"><i class="bi bi-box-arrow-in-left"></i> Logout</a>
                             </li>
                         }
                         else
