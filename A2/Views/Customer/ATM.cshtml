@@ -24,7 +24,7 @@
 
                     @foreach (var acc in Model.Customer.Accounts)
                     {
-                        <option value=@acc.AccountNumber>@Html.DisplayFor(x => acc.AccountNumber) @Html.DisplayFor(x => acc.AccountType)</option>
+                        <option value=@acc.AccountNumber>@Html.DisplayFor(x => acc.AccountNumber) [@Html.DisplayFor(x => acc.AccountType)]</option>
                     }
                 </select>
             </div>
