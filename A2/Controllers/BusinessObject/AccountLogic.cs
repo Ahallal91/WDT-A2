@@ -61,7 +61,7 @@ namespace A2.Controllers.BusinessObject
             }
             return account;
         }
-        public Account Transfer(decimal value, Account account, int toAccountNumber, string comment)
+        public Account Transfer(decimal value, Account account, Account toAccountNumber, string comment)
         {
             AccountConstraints constraints = new AccountConstraints(account.AccountType);
             string transferTransaction = "T";
@@ -73,9 +73,17 @@ namespace A2.Controllers.BusinessObject
                     {
                         TransactionType = transferTransaction,
                         AccountNumber = account.AccountNumber,
-                        DestinationAccount = toAccountNumber,
+                        DestinationAccount = toAccountNumber.AccountNumber,
                         Amount = value,
-                        Comment = "Transfer",
+                        Comment = comment,
+                        ModifyDate = DateTime.Now
+                    });
+                    toAccountNumber.Transactions.Add(new Transaction
+                    {
+                        TransactionType = transferTransaction,
+                        AccountNumber = toAccountNumber.AccountNumber,
+                        Amount = value,
+                        Comment = comment,
                         ModifyDate = DateTime.Now
                     });
                 }
@@ -103,13 +111,14 @@ namespace A2.Controllers.BusinessObject
                         {
                             freeTransactions++;
                         }
-                        else if (transaction.TransactionType == "T" && transaction.DestAccount.AccountNumber != 0)
+                        else if (transaction.TransactionType == "T" && transaction.DestAccount.AccountNumber == 0)
                         {
                             freeTransactions++;
                         }
                     }
                 }
             }
+            Console.WriteLine(freeTransactions + "got here");
             return freeTransactions;
         }
         /// <summary>

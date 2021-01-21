@@ -15,6 +15,7 @@ namespace A2.Models
         [Required]
         [StringLength(1)]
         [Display(Name = "Type")]
+        [RegularExpression(@"^(?-i:S|C)?$", ErrorMessage = "Enter a valid account type")]
         public string AccountType { get; set; }
         [Required]
         [ForeignKey("Customer")]
@@ -23,6 +24,7 @@ namespace A2.Models
         [Required]
         [Column(TypeName = "money")]
         [DataType(DataType.Currency)]
+        [RegularExpression(@"^([0-9]*)(.[[0-9]+]?)?$", ErrorMessage = "Currency must be greater than zero and to two decimal places.")]
         public decimal Balance { get; set; }
         [Required, StringLength(20)]
         public DateTime ModifyDate { get; set; }

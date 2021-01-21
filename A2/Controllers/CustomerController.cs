@@ -8,8 +8,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using A2.Filters;
+using Utilities;
 using A2.Controllers.BusinessObject;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using A2.ViewModel;
 
 namespace A2.Controllers
 {
@@ -29,95 +31,71 @@ namespace A2.Controllers
         {
             var customer = await _context.Customer.Include(x => x.Accounts).
                 FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
-
-            return View(customer);
+            var atmViewModel = new ATMViewModel()
+            {
+                Customer = customer,
+            };
+            return View(atmViewModel);
         }
-
-        public async Task<IActionResult> Transaction(int id) => View(await _context.Account.FindAsync(id));
         [HttpPost]
-        public async Task<IActionResult> ATMTransaction(int accountNumber, int toAccountNumber, decimal amount, string transactionType, string comment)
+        public async Task<IActionResult> ATMTransaction(int accountNumber, string toAccountNumber, decimal amount, string transactionType, string comment)
         {
             var customer = await _context.Customer.Include(x => x.Accounts).
                 FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
-            if (amount <= 0)
-            {
-                ModelState.AddModelError("Amount", "Amount must be positive");
-            }
-            if (Math.Round(amount, 2) != amount)
-            {
-                ModelState.AddModelError("Amount", "Please enter currency to 2 decimal places.");
-            }
-            if (accountNumber == toAccountNumber)
-            {
-                ModelState.AddModelError("AccountError", "You cannot transfer to your own account.");
-            }
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Amount = amount;
-                return View("ATM", customer);
-            }
 
             AccountLogic processTransaction = new AccountLogic();
             var account = await _context.Account.FindAsync(accountNumber);
-            if (transactionType == nameof(Transfer) && toAccountNumber != 0)
+            Account toAccount = null;
+            if (transactionType == nameof(processTransaction.Transfer))
             {
-                var toAccount = await _context.Account.FindAsync(toAccountNumber);
-                if (toAccount == null)
+                if (!int.TryParse(toAccountNumber, out var toAccNumber))
                 {
-                    ModelState.AddModelError("AccountError", "The account you are transferring to does not exist");
-                    ViewBag.Amount = amount;
-                    return View("ATM", customer);
+                    ModelState.AddModelError("AccountError", "You must enter an account number to transfer to.");
                 }
-                account = processTransaction.Transfer(amount, account, toAccountNumber, comment);
+                if (accountNumber == toAccNumber)
+                {
+                    ModelState.AddModelError("AccountError", "You cannot transfer to your own account.");
+                }
+                else if (Validator.FourDigits(toAccNumber))
+                {
+                    toAccount = await _context.Account.FindAsync(toAccNumber);
+                    if (toAccount == null)
+                    {
+                        ModelState.AddModelError("AccountError", "The account you are transferring to does not exist");
+                    }
+                }
+                if (!ModelState.IsValid)
+                {
+                    var atmViewModel = new ATMViewModel()
+                    {
+                        Customer = customer,
+                    };
+                    ViewBag.Amount = amount;
+                    return View("ATM", atmViewModel);
+                }
+                account = processTransaction.Transfer(amount, account, toAccount, comment);
             }
-            else if (transactionType == nameof(Deposit))
+            else if (transactionType == nameof(processTransaction.Deposit))
             {
                 account = processTransaction.Deposit(amount, account);
             }
-            else if (transactionType == nameof(Withdraw))
+            else if (transactionType == nameof(processTransaction.Withdraw))
             {
                 account = processTransaction.Withdraw(amount, account);
             }
             if (account == null)
             {
                 ModelState.AddModelError("Amount", "You have insufficient Balance for that transaction.");
+                var atmViewModel = new ATMViewModel()
+                {
+                    Customer = customer,
+                };
                 ViewBag.Amount = amount;
-                return View("ATM", customer);
+                return View("ATM", atmViewModel);
             }
-            return RedirectToAction(nameof(Home));
-        }
-        public async Task<IActionResult> Deposit(int id, decimal amount)
-        {
-            var account = await _context.Account.FindAsync(id);
-
-            AccountLogic processDeposit = new AccountLogic();
-            account = processDeposit.Deposit(amount, account);
             await _context.SaveChangesAsync();
-
             return RedirectToAction(nameof(Home));
         }
-        public async Task<IActionResult> Withdraw(int id, decimal amount)
-        {
-            var account = await _context.Account.FindAsync(id);
-            var customer = await _context.Customer.Include(x => x.Accounts).
-    FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
-
-            AccountLogic processWithdraw = new AccountLogic();
-            account = processWithdraw.Withdraw(amount, account);
-            if (account == null)
-            {
-                ModelState.AddModelError("Amount", "You have insufficient Balance to Withdraw that amount.");
-                return View();
-            }
-            else
-            {
-                await _context.SaveChangesAsync();
-            }
-            return RedirectToAction(nameof(Home));
-        }
-        public async Task<IActionResult> Transfer(int id, decimal amount, int toAccountNumber)
-        {
-            return RedirectToAction(nameof(Home));
-        }
+        public async Task<IActionResult> Transaction(int id) => View(await _context.Account.FindAsync(id));
     }
 }
