@@ -28,6 +28,7 @@ namespace A2.Models
         public DateTime ScheduleDate { get; set; }
         [Required]
         [StringLength(1)]
+        [RegularExpression(@"^[MQS]$", ErrorMessage = "Invalid payment period.")]
         public string Period { get; set; }
         [Required]
         public DateTime ModifyDate { get; set; }

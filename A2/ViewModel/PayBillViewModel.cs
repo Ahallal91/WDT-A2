@@ -13,10 +13,12 @@ namespace A2.ViewModel
         [RegularExpression(@"^[0-9]*$", ErrorMessage = "PayeeID must be only numbers.")]
         public string PayeeID { get; set; }
         public string ToAccountNumber { get; set; }
+        [Required]
         [DataType(DataType.Currency)]
         [RegularExpression(@"^[0-9]*(\.[0-9][0-9]?)?$", ErrorMessage = "Currency must be greater than zero and to two decimal places.")]
         public decimal Amount { get; set; }
-        [RegularExpression(@"^(?-i:M|Q|S)?$", ErrorMessage = "Enter a valid State.")]
+        [RegularExpression(@"^[MQS]$", ErrorMessage = "Invalid payment period.")]
+
         public string Period { get; set; }
         public DateTime ScheduledDate { get; set; }
     }

@@ -15,7 +15,7 @@ namespace A2.Models
         public int TransactionID { get; set; }
         [Required]
         [StringLength(1)]
-        [RegularExpression(@"^(?-i:D|W|T|S|B)?$", ErrorMessage = "Enter a valid transaction type")]
+        [RegularExpression(@"^[DWTSB]$", ErrorMessage = "Enter a valid transaction type")]
         public string TransactionType { get; set; }
         [Required]
         [ForeignKey("Account")]

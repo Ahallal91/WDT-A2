@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Pay Bill";
 }
-
+<img src="~/images/transfer.svg" asp-append-version="true" style="z-index: -1; position: absolute;">
 <div class="row mt-3 ">
     <div class="col-md-6 offset-md-3 px-5 py-5 my-5 rounded text-light bg-dark">
         <h1 class="display-4 text-left pb-3">Schedule Bill Pay</h1>
@@ -18,7 +18,7 @@
                     }
                 </select>
             </div>
-            <div class="form-group" id="TransferATM">
+            <div class="form-group">
                 <label asp-for="PayeeID" class="control-label"></label>
                 <input asp-for="PayeeID" class="form-control" data-val="true"
                        data-val-required="The PayeeID field is required." />
@@ -33,8 +33,9 @@
             </div>
             <div class="form-group">
                 <label asp-for="ScheduledDate" class="control-label"></label>
-                <input type="date" asp-for="ScheduledDate" class="form-control"
-                       data-val-required="The Date field is required." value="ScheduleDate" />
+                <input type="datetime-local" asp-for="ScheduledDate" asp-format="{0:dd/MM/yyyy HH:mm}" class="form-control"
+                       data-val-required="The Date field is required." />
+                @Html.ValidationMessage("DateError", new { @class = "text-danger" })
                 <span asp-validation-for="ScheduledDate" class="text-danger"></span>
             </div>
             <div class="form-group">

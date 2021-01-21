@@ -15,6 +15,7 @@ namespace A2.ViewModel
         public Customer Customer { get; set; }
         [RegularExpression(@"^\d{4}?$", ErrorMessage = "Account numbers must be 4 digits")]
         public string ToAccountNumber { get; set; }
+        [Required]
         [DataType(DataType.Currency)]
         [RegularExpression(@"^[0-9]*(\.[0-9][0-9]?)?$", ErrorMessage = "Currency must be greater than zero and to two decimal places.")]
         public decimal Amount { get; set; }

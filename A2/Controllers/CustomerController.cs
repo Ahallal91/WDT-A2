@@ -91,7 +91,7 @@ namespace A2.Controllers
                     Customer = customer,
                 };
                 ViewBag.Amount = amount;
-                return View("ATM", atmViewModel);
+                return View(nameof(ATM), atmViewModel);
             }
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Home));
@@ -107,16 +107,34 @@ namespace A2.Controllers
             };
             return View(payBillViewModel);
         }
-        public async Task<IActionResult> PayBillTransaction(int accountNumber, int payeeNo, decimal amount, DateTime scheduledDate, string period)
+        [HttpPost]
+        public async Task<IActionResult> PayBillTransaction(int accountNumber, int payeeID, decimal amount, DateTime scheduledDate, string period)
         {
             var customer = await _context.Customer.Include(x => x.Accounts).
                 FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
-            Console.WriteLine("acc: " + accountNumber + " payee: " + payeeNo + " amount: " + amount + " scheduledate: " + scheduledDate + " period: " + period);
-            var payBillViewModel = new PayBillViewModel()
+
+            Console.WriteLine("acc: " + accountNumber + " payee: " + payeeID + " amount: " + amount + " scheduledate: " + scheduledDate + " period: " + period);
+            if (scheduledDate.CompareTo(DateTime.Now) < 0)
             {
-                Customer = customer,
-            };
-            return View(payBillViewModel);
+                ModelState.AddModelError("DateError", "You cannot schedule a date in the past.");
+            }
+            var payeeIDObject = await _context.Payee.FindAsync(payeeID);
+            if (payeeIDObject == null)
+            {
+                ModelState.AddModelError("PayeeID", "That PayeeID does not exist.");
+            }
+            if (!ModelState.IsValid)
+            {
+                var payBillViewModel = new PayBillViewModel()
+                {
+                    Customer = customer,
+                };
+                ViewBag.Amount = amount;
+                return View(nameof(PayBill), payBillViewModel);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Home));
         }
     }
 }

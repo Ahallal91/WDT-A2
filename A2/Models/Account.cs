@@ -17,7 +17,7 @@ namespace A2.Models
         [Required]
         [StringLength(1)]
         [Display(Name = "Type")]
-        [RegularExpression(@"^(?-i:S|C)?$", ErrorMessage = "Enter a valid account type")]
+        [RegularExpression(@"^[SC]$", ErrorMessage = "Enter a valid account type")]
         public string AccountType { get; set; }
         [Required]
         [ForeignKey("Customer")]
