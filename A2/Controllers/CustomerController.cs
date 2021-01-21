@@ -111,6 +111,7 @@ namespace A2.Controllers
         {
             var customer = await _context.Customer.Include(x => x.Accounts).
                 FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
+            Console.WriteLine("acc: " + accountNumber + " payee: " + payeeNo + " amount: " + amount + " scheduledate: " + scheduledDate + " period: " + period);
             var payBillViewModel = new PayBillViewModel()
             {
                 Customer = customer,

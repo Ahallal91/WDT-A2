@@ -27,7 +27,7 @@ namespace A2.Models
         public virtual Account DestAccount { get; set; }
         [Column(TypeName = "money")]
         [DataType(DataType.Currency)]
-        [RegularExpression(@"^[0-9]?[0-9]?(\.[0-9][0-9]?)?$", ErrorMessage = "Currency must be greater than zero and to two decimal places.")]
+        [RegularExpression(@"^[0-9]*(\.[0-9][0-9]?)?$", ErrorMessage = "Currency must be greater than zero and to two decimal places.")]
         public decimal? Amount { get; set; }
         [StringLength(255)]
         public string Comment { get; set; }

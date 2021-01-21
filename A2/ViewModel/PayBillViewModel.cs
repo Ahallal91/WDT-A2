@@ -14,7 +14,7 @@ namespace A2.ViewModel
         public string PayeeID { get; set; }
         public string ToAccountNumber { get; set; }
         [DataType(DataType.Currency)]
-        [RegularExpression(@"^[0-9]?[0-9]?(\.[0-9][0-9]?)?$", ErrorMessage = "Currency must be greater than zero and to two decimal places.")]
+        [RegularExpression(@"^[0-9]*(\.[0-9][0-9]?)?$", ErrorMessage = "Currency must be greater than zero and to two decimal places.")]
         public decimal Amount { get; set; }
         [RegularExpression(@"^(?-i:M|Q|S)?$", ErrorMessage = "Enter a valid State.")]
         public string Period { get; set; }
