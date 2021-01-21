@@ -4,7 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
-
+/*
+ * Reference McbaExampleWithLogin Transaction.cs week 6
+ */
 namespace A2.Models
 {
     public class Transaction

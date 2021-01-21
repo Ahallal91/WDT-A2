@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+/*
+ * Reference McbaExampleWithLogin Customer.cs week 6
+ */
 namespace A2.Models
 {
     public record Customer

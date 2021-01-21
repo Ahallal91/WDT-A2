@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Transactions;
-
+/*
+ * Reference McbaExampleWithLogin Account.cs week 6
+ */
 namespace A2.Models
 {
     public class Account
