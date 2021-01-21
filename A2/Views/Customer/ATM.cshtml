@@ -41,7 +41,7 @@
                        data-val-required="The Amount field is required." />
                 @Html.ValidationMessage("Amount", new { @class = "text-danger" })
             </div>
-            <div class="form-group text-left">
+            <div class="form-group text-left" id="CommentATM" style="display: none;">
                 <label class="control-label">Comment</label>
                 <input value="" name="comment" id="comment" class="form-control" />
 
@@ -57,8 +57,10 @@
     function onSelectEventHandler() {
         if (document.getElementById('transactionType').value == "Transfer") {
             document.getElementById('TransferATM').style.display = 'block';
+            document.getElementById('CommentATM').style.display = 'block';
         } else {
             document.getElementById('TransferATM').style.display = 'none';
+            document.getElementById('CommentATM').style.display = 'none';
         }
     }
 </script>
