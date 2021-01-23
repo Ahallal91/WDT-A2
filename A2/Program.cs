@@ -23,11 +23,12 @@ namespace A2
                 try
                 {
                     WebService.Initialize(services);
+                    SeedPayeeTable.Initialize(services);
                 }
                 catch (Exception e)
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(e, "An error occured contacting the webservice.");
+                    logger.LogError(e, "An error occured contacting the webservice, or the database");
                 }
             }
 

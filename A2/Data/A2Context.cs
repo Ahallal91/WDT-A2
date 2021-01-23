@@ -20,6 +20,7 @@ namespace A2.Data
         public DbSet<BillPay> BillPay { get; set; }
         public DbSet<Payee> Payee { get; set; }
         public DbSet<Transaction> Transaction { get; set; }
+        public object Customers { get; internal set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
