@@ -197,6 +197,7 @@ namespace A2.Controllers.BusinessObject
         {
             AccountConstraints constraints = new AccountConstraints(account.AccountType);
             string billPayTransaction = "B";
+
             if ((account.Balance - billPay.Amount) >= constraints.MinBalance)
             {
                 account.Balance -= billPay.Amount;
@@ -208,30 +209,48 @@ namespace A2.Controllers.BusinessObject
                     Comment = "BillPay",
                     ModifyDate = DateTime.Now
                 });
-                CalculateNextBillPay(billPay, account);
+                CalculateNextBillPay(billPay, ref account);
                 return account;
             }
-            return null;
+            account.BillPay.Find(x => x.BillPayID == billPay.BillPayID).Status = StatusType.Failed;
+            return account;
         }
 
-        private void CalculateNextBillPay(BillPay billPay, Account account)
+        private Account CalculateNextBillPay(BillPay billPay, ref Account account)
         {
             if (billPay.Period == "S")
             {
-                account.BillPay.Remove(billPay);
+                account.BillPay.Find(x => x.BillPayID == billPay.BillPayID).Status = StatusType.Complete;
             }
             else if (billPay.Period == "M")
             {
-                account.BillPay.Remove(billPay);
-                billPay.ScheduleDate.AddMonths(1);
-                account.BillPay.Add(billPay);
+                account.BillPay.Find(x => x.BillPayID == billPay.BillPayID).Status = StatusType.Complete;
+                account.BillPay.Add(new BillPay()
+                {
+                    AccountNumber = billPay.AccountNumber,
+                    PayeeID = billPay.PayeeID,
+                    Amount = billPay.Amount,
+                    ScheduleDate = billPay.ScheduleDate.AddMonths(1),
+                    Period = billPay.Period,
+                    ModifyDate = DateTime.Now,
+                    Status = StatusType.Awaiting
+                });
             }
             else if (billPay.Period == "Q")
             {
-                account.BillPay.Remove(billPay);
-                billPay.ScheduleDate.AddMonths(3);
-                account.BillPay.Add(billPay);
+                account.BillPay.Find(x => x.BillPayID == billPay.BillPayID).Status = StatusType.Complete;
+                account.BillPay.Add(new BillPay()
+                {
+                    AccountNumber = billPay.AccountNumber,
+                    PayeeID = billPay.PayeeID,
+                    Amount = billPay.Amount,
+                    ScheduleDate = billPay.ScheduleDate.AddMonths(3),
+                    Period = billPay.Period,
+                    ModifyDate = DateTime.Now,
+                    Status = StatusType.Awaiting
+                });
             }
+            return account;
         }
     }
 }

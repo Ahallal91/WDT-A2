@@ -15,6 +15,9 @@ namespace A2.Models
     }
     public class BillPay
     {
+        private DateTime modifyDate;
+        private DateTime scheduleDate;
+
         [Required]
         public int BillPayID { get; set; }
         [Required]
@@ -31,13 +34,33 @@ namespace A2.Models
         [RegularExpression(@"^[0-9]*(\.[0-9][0-9]?)?$", ErrorMessage = "Currency must be greater than zero and to two decimal places.")]
         public decimal Amount { get; set; }
         [Required]
-        public DateTime ScheduleDate { get; set; }
+        public DateTime ScheduleDate
+        {
+            get
+            {
+                return this.scheduleDate;
+            }
+            set
+            {
+                this.scheduleDate = value.ToUniversalTime();
+            }
+        }
         [Required]
         [StringLength(1)]
         [RegularExpression(@"^[MQS]$", ErrorMessage = "Invalid payment period.")]
         public string Period { get; set; }
         [Required]
-        public DateTime ModifyDate { get; set; }
+        public DateTime ModifyDate
+        {
+            get
+            {
+                return this.modifyDate;
+            }
+            set
+            {
+                this.modifyDate = value.ToUniversalTime();
+            }
+        }
         public StatusType Status { get; set; }
     }
 }

@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Http
+@model IEnumerable<BillPaysViewModel>
+@{
+    ViewData["Title"] = "Bill Pays";
+}
+<meta http-equiv="refresh" content="10">
+<div class="text-center">
+    <h1 class="display-4 text-left mb-5">Bill Pays for all accounts.</h1>
+    <div class="table-responsive">
+        <table class="table text-left">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(x => x.AccountNumber)</th>
+                    <th>@Html.DisplayNameFor(x => x.PayeeID)</th>
+                    <th>@Html.DisplayNameFor(x => x.Amount)</th>
+                    <th>@Html.DisplayNameFor(x => x.ScheduleDate)</th>
+                    <th>@Html.DisplayNameFor(x => x.Period)</th>
+                    <th>@Html.DisplayNameFor(x => x.Status)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bill in Model)
+                {
+
+                    <tr class="@(@bill.Status == StatusType.Failed ? "table-danger" : "")
+                        @(@bill.Status == StatusType.Complete ? "table-success" : "")
+                        @(@bill.Status == StatusType.Awaiting ? "table-warning" : "")">
+                        <td>@Html.DisplayFor(x => bill.AccountNumber)</td>
+                        <td>@Html.DisplayFor(x => bill.PayeeID)</td>
+                        <td>@Html.DisplayFor(x => bill.Amount)</td>
+                        <td>@Html.DisplayFor(x => bill.ScheduleDate)</td>
+                        <td>@Html.DisplayFor(x => bill.Period)</td>
+                        <td>@Html.DisplayFor(x => bill.Status)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

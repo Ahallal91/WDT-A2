@@ -109,7 +109,7 @@ namespace A2.Controllers
             return View(payBillViewModel);
         }
         [HttpPost]
-        public async Task<IActionResult> PayBillTransaction(int accountNumber, int payeeID, decimal amount, DateTime scheduledDate, string period)
+        public async Task<IActionResult> AddPayBillTransaction(int accountNumber, int payeeID, decimal amount, DateTime scheduledDate, string period)
         {
             if (scheduledDate.CompareTo(DateTime.Now) < 0)
             {
@@ -139,10 +139,34 @@ namespace A2.Controllers
                 Amount = amount,
                 ScheduleDate = scheduledDate,
                 Period = period,
-                ModifyDate = DateTime.Now
+                ModifyDate = DateTime.Now,
+                Status = StatusType.Awaiting
             });
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Home));
+            return RedirectToAction(nameof(BillPays));
+        }
+
+        public async Task<IActionResult> BillPays()
+        {
+            var customer = await _context.Customer.FindAsync(CustomerID);
+            List<BillPaysViewModel> billPaysViewModels = new List<BillPaysViewModel>();
+            foreach (var acc in customer.Accounts)
+            {
+                foreach (var bill in acc.BillPay)
+                {
+                    billPaysViewModels.Add(new BillPaysViewModel()
+                    {
+                        AccountNumber = acc.AccountNumber,
+                        PayeeID = bill.PayeeID,
+                        Amount = bill.Amount,
+                        ScheduleDate = bill.ScheduleDate,
+                        Period = bill.Period,
+                        Status = bill.Status
+                    });
+                }
+            }
+
+            return View(billPaysViewModels);
         }
     }
 }

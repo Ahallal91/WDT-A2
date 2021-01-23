@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,32 +31,27 @@ namespace A2.BackgroundServices
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-
-                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+                await BillPayCheck(stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
             }
         }
-        private async Task BillPayCheck(CancellationToken cancellationToken)
+        private async Task BillPayCheck(CancellationToken stoppingToken)
         {
             using var scope = _services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<A2Context>();
+            var account = await context.Account.ToListAsync(stoppingToken);
 
-            var account = await context.Account.ToListAsync(cancellationToken);
-
-            foreach (var acc in account)
+            for (int i = 0; i < account.Count; i++)
             {
-                foreach (var bill in acc.BillPay)
+                for (int ii = 0; ii < account[i].BillPay.Count; ii++)
                 {
-                    if (bill.ScheduleDate.CompareTo(DateTime.Now) > 0)
+                    if (account[i].BillPay[ii].ScheduleDate.CompareTo(DateTime.UtcNow) < 0 && account[i].BillPay[ii].Status == StatusType.Awaiting)
                     {
-                        Account retAccount = _processTransaction.ComputeBillPay(bill, acc);
-                        if (account != null)
-                        {
-                            
-                        }
+                        account[i] = _processTransaction.ComputeBillPay(account[i].BillPay[ii], account[i]);
                     }
                 }
             }
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(stoppingToken);
         }
     }
 }
