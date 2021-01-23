@@ -45,6 +45,7 @@ namespace A2.Controllers
 
             AccountLogic processTransaction = new AccountLogic();
             var account = await _context.Account.FindAsync(accountNumber);
+
             Account toAccount = null;
             if (transactionType == nameof(processTransaction.Transfer))
             {
@@ -110,10 +111,6 @@ namespace A2.Controllers
         [HttpPost]
         public async Task<IActionResult> PayBillTransaction(int accountNumber, int payeeID, decimal amount, DateTime scheduledDate, string period)
         {
-            var customer = await _context.Customer.Include(x => x.Accounts).
-                FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
-
-            Console.WriteLine("acc: " + accountNumber + " payee: " + payeeID + " amount: " + amount + " scheduledate: " + scheduledDate + " period: " + period);
             if (scheduledDate.CompareTo(DateTime.Now) < 0)
             {
                 ModelState.AddModelError("DateError", "You cannot schedule a date in the past.");
@@ -125,6 +122,8 @@ namespace A2.Controllers
             }
             if (!ModelState.IsValid)
             {
+                var customer = await _context.Customer.Include(x => x.Accounts).
+                    FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
                 var payBillViewModel = new PayBillViewModel()
                 {
                     Customer = customer,
@@ -132,7 +131,16 @@ namespace A2.Controllers
                 ViewBag.Amount = amount;
                 return View(nameof(PayBill), payBillViewModel);
             }
-
+            var account = await _context.Account.FindAsync(accountNumber);
+            account.BillPay.Add(new BillPay()
+            {
+                AccountNumber = accountNumber,
+                PayeeID = payeeID,
+                Amount = amount,
+                ScheduleDate = scheduledDate,
+                Period = period,
+                ModifyDate = DateTime.Now
+            });
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Home));
         }

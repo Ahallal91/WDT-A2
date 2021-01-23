@@ -183,5 +183,55 @@ namespace A2.Controllers.BusinessObject
                 ModifyDate = DateTime.Now
             });
         }
+
+        /// <summary>
+        /// Compute bill pay takes in a value and an account, calculates if the bill pay transaction can proceed
+        /// (checks balance), if it can it minuses the value of the billpay from the account and adds a B transaction
+        /// to the accounts transaction list, it also removes the billpay from the specified account once it completes.
+        /// </summary>
+        /// <param name="billPay">The billpay to compute</param>
+        /// <param name="account">The account that owns the bill pay </param>
+        /// Eg Withdraw transactions have a withdraw charge</param>
+        /// <returns>account that computed the transaction or null if it failed.</returns>
+        public Account ComputeBillPay(BillPay billPay, Account account)
+        {
+            AccountConstraints constraints = new AccountConstraints(account.AccountType);
+            string billPayTransaction = "B";
+            if ((account.Balance - billPay.Amount) >= constraints.MinBalance)
+            {
+                account.Balance -= billPay.Amount;
+                account.Transactions.Add(new Transaction
+                {
+                    TransactionType = billPayTransaction,
+                    AccountNumber = account.AccountNumber,
+                    Amount = billPay.Amount,
+                    Comment = "BillPay",
+                    ModifyDate = DateTime.Now
+                });
+                CalculateNextBillPay(billPay, account);
+                return account;
+            }
+            return null;
+        }
+
+        private void CalculateNextBillPay(BillPay billPay, Account account)
+        {
+            if (billPay.Period == "S")
+            {
+                account.BillPay.Remove(billPay);
+            }
+            else if (billPay.Period == "M")
+            {
+                account.BillPay.Remove(billPay);
+                billPay.ScheduleDate.AddMonths(1);
+                account.BillPay.Add(billPay);
+            }
+            else if (billPay.Period == "Q")
+            {
+                account.BillPay.Remove(billPay);
+                billPay.ScheduleDate.AddMonths(3);
+                account.BillPay.Add(billPay);
+            }
+        }
     }
 }

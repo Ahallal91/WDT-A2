@@ -7,6 +7,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace A2.Models
 {
+    public enum StatusType
+    {
+        Awaiting = 1,
+        Failed = 2,
+        Complete = 3
+    }
     public class BillPay
     {
         [Required]
@@ -32,5 +38,6 @@ namespace A2.Models
         public string Period { get; set; }
         [Required]
         public DateTime ModifyDate { get; set; }
+        public StatusType Status { get; set; }
     }
 }

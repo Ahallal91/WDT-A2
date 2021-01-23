@@ -1,3 +1,4 @@
+using A2.BackgroundServices;
 using A2.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,6 +36,7 @@ namespace A2
                 // Enable lazy loading.
                 options.UseLazyLoadingProxies();
             });
+            services.AddHostedService<BillPayBackgroundService>();
             // Store session into Web-Server memory.
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
