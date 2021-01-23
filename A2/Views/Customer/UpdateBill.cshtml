@@ -1,32 +1,21 @@
 ﻿@using Microsoft.AspNetCore.Http
-@model PayBillViewModel
+@model BillPay
 @{
-    ViewData["Title"] = "Pay Bill";
+    ViewData["Title"] = "Update Bill";
 }
+
 <img src="~/images/transfer.svg" asp-append-version="true" style="z-index: -1; position: absolute;">
 <div class="row mt-3 ">
     <div class="col-md-6 offset-md-3 px-5 py-5 my-5 rounded text-light bg-dark">
-        <h1 class="display-4 text-left pb-3">Schedule Bill Pay</h1>
-        <form asp-action="AddPayBillTransaction">
-            <div class="form-group">
-                <label for="accountNumber" class="form-label">Please select your Account:</label>
-                <select class="form-select form-control" name="accountNumber" id="accountNumber" aria-label="Default select example">
+        <h1 class="display-4 text-left pb-3">Update Bill Pay</h1>
+        <p>Bill pay details:</p>
 
-                    @foreach (var acc in Model.Customer.Accounts)
-                    {
-                        <option value=@acc.AccountNumber>@Html.DisplayFor(x => acc.AccountNumber) [@Html.DisplayFor(x => acc.AccountType)]</option>
-                    }
-                </select>
-            </div>
+        <form asp-action="">
             <div class="form-group">
-                <label for="payeeID" class="form-label">Please select your Payee:</label>
-                <select class="form-select form-control" name="payeeID" id="payeeID" aria-label="Default select example">
-
-                    @foreach (var payee in Model.Payee)
-                    {
-                        <option value=@payee.PayeeID>@Html.DisplayFor(x => payee.PayeeName) [@Html.DisplayFor(x => payee.PayeeID)]</option>
-                    }
-                </select>
+                <label asp-for="PayeeID" class="control-label"></label>
+                <input asp-for="PayeeID" class="form-control" data-val="true"
+                       data-val-required="The PayeeID field is required." value="@Model.PayeeID" />
+                <span asp-validation-for="PayeeID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Amount" class="control-label"></label>
@@ -36,11 +25,10 @@
                 <span asp-validation-for="Amount" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ScheduledDate" class="control-label"></label>
-                <input type="datetime-local" asp-for="ScheduledDate" asp-format="{0:dd/MM/yyyy HH:mm}" class="form-control"
-                       data-val-required="The Date field is required." />
+                <label class="control-label">Scheduled Date</label>
+                <input type="datetime-local" asp-format="{0:dd/MM/yyyy HH:mm}" class="form-control"
+                       data-val-required="The Date field is required." value="@Model.ScheduleDate.ToLocalTime()" />
                 @Html.ValidationMessage("DateError", new { @class = "text-danger" })
-                <span asp-validation-for="ScheduledDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Period" class="control-label"></label>
@@ -50,6 +38,9 @@
                     <option value="Q">Quarterly</option>
                 </select>
                 <span asp-validation-for="Period" class="text-danger"></span>
+            </div>
+            <div class="form-group text-left">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-wallet2"></i> Cancel</button>
             </div>
             <div class="form-group text-right">
                 <button type="submit" class="btn btn-primary"><i class="bi bi-wallet2"></i> Process</button>

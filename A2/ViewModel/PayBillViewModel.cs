@@ -13,6 +13,7 @@ namespace A2.ViewModel
         public Customer Customer { get; set; }
         [RegularExpression(@"^[0-9]*$", ErrorMessage = "PayeeID must be only numbers.")]
         public string PayeeID { get; set; }
+        public List<Payee> Payee { get; set; }
         [Required]
         [DataType(DataType.Currency)]
         [RegularExpression(@"^[0-9]*(\.[0-9][0-9]?)?$", ErrorMessage = "Currency must be greater than zero and to two decimal places.")]

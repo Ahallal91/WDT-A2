@@ -11,6 +11,7 @@
             <thead>
                 <tr>
                     <th>@Html.DisplayNameFor(x => x.AccountNumber)</th>
+                    <th>@Html.DisplayNameFor(x => x.PayeeName)</th>
                     <th>@Html.DisplayNameFor(x => x.PayeeID)</th>
                     <th>@Html.DisplayNameFor(x => x.Amount)</th>
                     <th>@Html.DisplayNameFor(x => x.ScheduleDate)</th>
@@ -26,11 +27,13 @@
                         @(@bill.Status == StatusType.Complete ? "table-success" : "")
                         @(@bill.Status == StatusType.Awaiting ? "table-warning" : "")">
                         <td>@Html.DisplayFor(x => bill.AccountNumber)</td>
+                        <td>@Html.DisplayFor(x => bill.PayeeName)</td>
                         <td>@Html.DisplayFor(x => bill.PayeeID)</td>
                         <td>@Html.DisplayFor(x => bill.Amount)</td>
                         <td>@Html.DisplayFor(x => bill.ScheduleDate)</td>
                         <td>@Html.DisplayFor(x => bill.Period)</td>
                         <td>@Html.DisplayFor(x => bill.Status)</td>
+                        <td><a class=" btn btn-primary btn-block" asp-area="" asp-controller="Customer" asp-route-id="@bill.BillPayID" asp-action="UpdateBill">Modify</a></td>
                     </tr>
                 }
             </tbody>

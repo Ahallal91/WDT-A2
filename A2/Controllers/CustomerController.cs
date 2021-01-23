@@ -102,12 +102,22 @@ namespace A2.Controllers
         {
             var customer = await _context.Customer.Include(x => x.Accounts).
                 FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
+            var payee = await _context.Payee.ToListAsync();
             var payBillViewModel = new PayBillViewModel()
             {
                 Customer = customer,
+                Payee = payee
             };
             return View(payBillViewModel);
         }
+
+        public async Task<IActionResult> UpdateBill(int id)
+        {
+            var bill = await _context.BillPay.FirstOrDefaultAsync(x => x.BillPayID == id);
+
+            return View("UpdateBill", bill);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddPayBillTransaction(int accountNumber, int payeeID, decimal amount, DateTime scheduledDate, string period)
         {
@@ -156,8 +166,10 @@ namespace A2.Controllers
                 {
                     billPaysViewModels.Add(new BillPaysViewModel()
                     {
+                        BillPayID = bill.BillPayID,
                         AccountNumber = acc.AccountNumber,
                         PayeeID = bill.PayeeID,
+                        PayeeName = bill.Payee.PayeeName,
                         Amount = bill.Amount,
                         ScheduleDate = bill.ScheduleDate,
                         Period = bill.Period,

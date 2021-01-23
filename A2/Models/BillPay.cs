@@ -61,6 +61,7 @@ namespace A2.Models
                 this.modifyDate = value.ToUniversalTime();
             }
         }
+        [Required]
         public StatusType Status { get; set; }
     }
 }
