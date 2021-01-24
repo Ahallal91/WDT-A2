@@ -6,8 +6,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 /*
  * Reference McbaExampleWithLogin Login.cs week 6
  */
+
 namespace A2.Models
 {
+    /// <summary>
+    /// Login Record - Please see Readme for full justification of the login model as a record. 
+    /// To ensure login information is immutable in the system unless specifically specified (such as updated password)
+    /// a record form of Login Model is more secure and prevents the classes attributes changing unnecessarily.
+    /// </summary>
     public record Login
     {
         [Required]

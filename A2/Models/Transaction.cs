@@ -9,7 +9,14 @@ using System.Threading.Tasks;
  */
 namespace A2.Models
 {
-    public class Transaction
+    /// <summary>
+    /// Transaction Record - Please see Readme for full justification of the Transaction model as a record. 
+    /// When transactions are recorded they should remain in a immutable state to ensure that once a transaction is recorded
+    /// it can be uploaded into the database with the exact correct data. There is also an advantage for a banking application to
+    /// use a record for transactions as they would usually have many of them recorded. Using a record uses less resources when accessing
+    /// transactions in this manner.
+    /// </summary>
+    public record Transaction
     {
         [Required]
         public int TransactionID { get; set; }

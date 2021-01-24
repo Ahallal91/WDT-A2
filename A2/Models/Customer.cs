@@ -7,6 +7,13 @@ using System.ComponentModel.DataAnnotations.Schema;
  */
 namespace A2.Models
 {
+    /// <summary>
+    /// Customer Record - Please see Readme for full justification of the Customer model as a record. 
+    /// As Customer model is consistently passed around the program, the use of a record in this case
+    /// helps reduce resources used when using the Customer model. There is also little need to modify 
+    /// this model unless the customer is updating their contact information. Therefore it makes sense to 
+    /// have this class as a record rather than a normal class.
+    /// </summary>
     public record Customer
     {
         [Required]
