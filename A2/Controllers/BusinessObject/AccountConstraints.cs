@@ -15,6 +15,11 @@ namespace A2.Controllers.BusinessObject
         public readonly decimal transferCharge = 0.20M;
         public readonly int freeTransactionLimit = 4;
 
+        /// <summary>
+        /// AcccountConstraints class deals with specific charges on transactions, freetransactionlimits and minbalance and openingbalance
+        /// of individual account types. This allows correct charges to be applied to the right accounts.
+        /// </summary>
+        /// <param name="accountType">The type of account you want to get parameters for.</param>
         public AccountConstraints(string accountType)
         {
             SetAccount(accountType);
@@ -22,7 +27,10 @@ namespace A2.Controllers.BusinessObject
 
         public decimal OpeningBalance { get; private set; }
         public decimal MinBalance { get; private set; }
-
+        /// <summary>
+        /// Sets the openingBalance and minBalance constraints of an accountType which can be used for future checks.
+        /// </summary>
+        /// <param name="accountType">The type of account you want to get parameters for.</param>
         private void SetAccount(string accountType)
         {
             switch (accountType)

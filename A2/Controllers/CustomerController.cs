@@ -27,6 +27,9 @@ namespace A2.Controllers
                 FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
             return View(customer);
         }
+        /// <summary>
+        /// Returns the view for the ATM page as an ATMViewModel with customer of the current session.
+        /// </summary>
         public async Task<IActionResult> ATM()
         {
             var customer = await _context.Customer.Include(x => x.Accounts).
@@ -37,6 +40,11 @@ namespace A2.Controllers
             };
             return View(atmViewModel);
         }
+        /// <summary>
+        /// ATMTransaction method takes data from the ATM view and validates it. It then performs a deposit/withdraw/transfer depending
+        /// on what the user selected in the form. All transactions are added to the account transactions list. Successful transactions
+        /// redirect users to customer home page. Unsuccessful transactions reload the ATM page with the error displayed.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> ATMTransaction(int accountNumber, string toAccountNumber, decimal amount, string transactionType, string comment)
         {
@@ -98,6 +106,10 @@ namespace A2.Controllers
             return RedirectToAction(nameof(Home));
         }
         public async Task<IActionResult> Transaction(int id) => View(await _context.Account.FindAsync(id));
+        /// <summary>
+        /// PayBill returns the view for the PayBill page as a PayBillViewModel with the Customer of the session
+        /// and all available payees in the database loaded.
+        /// </summary>
         public async Task<IActionResult> PayBill()
         {
             var customer = await _context.Customer.Include(x => x.Accounts).
@@ -117,7 +129,11 @@ namespace A2.Controllers
 
             return View("UpdateBill", bill);
         }
-
+        /// <summary>
+        /// AddPayBillTransaction collects data from the PayBill view and validates it, if valid it adds the specified billpay to
+        /// the accounts billpay list and redirects the user to the BillPays view. If unsucessful it reloads the PayBill view
+        /// displaying the error.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> AddPayBillTransaction(int accountNumber, int payeeID, decimal amount, DateTime scheduledDate, string period)
         {
@@ -155,7 +171,11 @@ namespace A2.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(BillPays));
         }
-
+        /// <summary>
+        /// BillPays returns a view of BillPayViewModel as a list with Customer data, accountnumber information payee information and
+        /// BillPay information. This is used to display all the bills to the user so they can see billpay information. The view for this
+        /// page should refresh automatically to inform user in real-time when the background service updates bills.
+        /// </summary>
         public async Task<IActionResult> BillPays()
         {
             var customer = await _context.Customer.FindAsync(CustomerID);

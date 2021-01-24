@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace A2.Controllers
 {
+    /*
+    * Reference McbaExampleWithLogin Login.cs week 6
+    */
     [Route("/MCBA/CustomerLogin")]
     public class LoginController : Controller
     {
@@ -28,7 +31,7 @@ namespace A2.Controllers
                 return View(new Login { LoginID = loginID });
             }
 
-            // Login customer.
+            // Set customerID and customerName in the session after sucessful login.
             HttpContext.Session.SetInt32(nameof(Customer.CustomerID), login.CustomerID);
             HttpContext.Session.SetString(nameof(Customer.CustomerName), login.Customer.CustomerName);
 

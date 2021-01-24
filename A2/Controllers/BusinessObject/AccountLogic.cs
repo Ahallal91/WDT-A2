@@ -187,12 +187,13 @@ namespace A2.Controllers.BusinessObject
         /// <summary>
         /// Compute bill pay takes in a value and an account, calculates if the bill pay transaction can proceed
         /// (checks balance), if it can it minuses the value of the billpay from the account and adds a B transaction
-        /// to the accounts transaction list, it also removes the billpay from the specified account once it completes.
+        /// to the accounts transaction list, it calls CalculateNextBillPay to calculate billpays of future payments,
+        /// and set current payments to complete. If insufficient balance on the account, then billpay is set to rejected status.
         /// </summary>
         /// <param name="billPay">The billpay to compute</param>
         /// <param name="account">The account that owns the bill pay </param>
         /// Eg Withdraw transactions have a withdraw charge</param>
-        /// <returns>account that computed the transaction or null if it failed.</returns>
+        /// <returns>account that computed the transaction</returns>
         public Account ComputeBillPay(BillPay billPay, Account account)
         {
             AccountConstraints constraints = new AccountConstraints(account.AccountType);
@@ -215,8 +216,13 @@ namespace A2.Controllers.BusinessObject
             account.BillPay.Find(x => x.BillPayID == billPay.BillPayID).Status = StatusType.Failed;
             return account;
         }
-
-        private Account CalculateNextBillPay(BillPay billPay, ref Account account)
+        /// <summary>
+        /// CalculateNextBillPay sets the current bill pay to complete, if the billpay is monthly or quarterly it 
+        /// adds a new bill pay of the same data to the account for the specified time.
+        /// </summary>
+        /// <param name="billPay">is the amount to transfer.</param>
+        /// <param name="account">account to transfer from</param>
+        private void CalculateNextBillPay(BillPay billPay, ref Account account)
         {
             if (billPay.Period == "S")
             {
@@ -250,7 +256,6 @@ namespace A2.Controllers.BusinessObject
                     Status = StatusType.Awaiting
                 });
             }
-            return account;
         }
     }
 }
