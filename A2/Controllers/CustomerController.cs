@@ -129,6 +129,7 @@ namespace A2.Controllers
 
             return View("UpdateBill", bill);
         }
+
         /// <summary>
         /// AddPayBillTransaction collects data from the PayBill view and validates it, if valid it adds the specified billpay to
         /// the accounts billpay list and redirects the user to the BillPays view. If unsucessful it reloads the PayBill view

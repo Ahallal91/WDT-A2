@@ -1,0 +1,39 @@
+﻿@model int
+
+@{
+    var statusCode = Model;
+    var statusmessage = "";
+    switch (statusCode)
+    {
+        case 400:
+            statusmessage = "Bad request";
+            break;
+        case 401:
+            statusmessage = "Unauthorized";
+            break;
+        case 403:
+            statusmessage = "Forbidden";
+            break;
+        case 404:
+            statusmessage = "Page not found";
+            break;
+        case 408:
+            statusmessage = "The server timed out waiting for the request";
+            break;
+        case 502:
+            statusmessage = "Bad Gateway";
+            break;
+        case 504:
+            statusmessage = "Gateway Timeout";
+            break;
+        default:
+            statusmessage = "Unexpected error occured, sorry!";
+            break;
+    }
+}
+<div>
+    <img src="~/images/error.png" height="700" asp-append-version="true" style="z-index: -1; position: absolute;">
+    <h1 class="text-center">Error @Model</h1>
+    <h3 class="text-center">@statusmessage</h3>
+
+</div>
