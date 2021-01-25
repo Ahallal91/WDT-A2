@@ -246,9 +246,9 @@ namespace A2.Controllers
             return View("UpdateBill", updateViewModel);
         }
         [HttpPost]
-        public async Task<IActionResult> UpdatePayBillTransaction([Bind("BillPayID, AccountNumber, PayeeID, Amount, ScheduleDate, Period")] UpdateBillPayViewModel updateBillPays)
+        public async Task<IActionResult> UpdatePayBillTransaction([Bind("BillPayID," +
+            " AccountNumber, PayeeID, Amount, ScheduleDate, Period")] UpdateBillPayViewModel updateBillPays)
         {
-            Console.WriteLine(updateBillPays.ScheduleDate + " date now:" + DateTime.Now);
             if (updateBillPays.ScheduleDate.CompareTo(DateTime.Now) < 0)
             {
                 ModelState.AddModelError("DateError", "You cannot schedule a date in the past.");
