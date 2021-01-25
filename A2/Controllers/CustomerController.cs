@@ -122,10 +122,11 @@ namespace A2.Controllers
             var customer = await _context.Customer.Include(x => x.Accounts).
                 FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
             // sets default account to first account if no account id
-            if (id == 0)
+            if (customer.Accounts.Find(x => x.AccountNumber == id) == null)
             {
                 id = customer.Accounts.First().AccountNumber;
             }
+
             // gets transactions of selected account in pagedList form
             var pagedTransactionList = await _context.Transaction.Where(X => X.AccountNumber == id).ToPagedListAsync(page, pageSize);
 
