@@ -34,10 +34,21 @@
                         <td>@Html.DisplayFor(x => bill.ScheduleDate)</td>
                         <td>@Html.DisplayFor(x => bill.Period)</td>
                         <td>@Html.DisplayFor(x => bill.Status)</td>
-                        <td><a class=" btn btn-primary btn-block" asp-area="" asp-controller="Customer" asp-route-id="@bill.BillPayID" asp-action="UpdateBill">Modify</a></td>
+                        @if (bill.Status != StatusType.Complete)
+                        {
+                            <td><a class=" btn btn-primary btn-block" asp-area="" asp-controller="Customer" asp-route-id="@bill.BillPayID" asp-action="UpdateBill">Modify</a></td>
+                        }
+                        else
+                        {
+                            <td>Unmodifiable</td>
+                        }
                     </tr>
                 }
             </tbody>
         </table>
     </div>
 </div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

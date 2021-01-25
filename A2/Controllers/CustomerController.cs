@@ -45,8 +45,6 @@ namespace A2.Controllers
         [HttpPost]
         public async Task<IActionResult> ATMTransaction(int accountNumber, string toAccountNumber, decimal amount, string transactionType, string comment)
         {
-
-
             AccountLogic processTransaction = new AccountLogic();
             var account = await _context.Account.Include(x => x.Transactions).FirstOrDefaultAsync(x => x.AccountNumber == accountNumber);
 
@@ -71,7 +69,7 @@ namespace A2.Controllers
                 }
                 if (!ModelState.IsValid)
                 {
-                    return View(nameof(ATM), ReturnAtmViewModel(amount));
+                    return View(nameof(ATM), ReturnAtmViewModel(amount).Result);
                 }
                 account = processTransaction.Transfer(amount, account, toAccount, comment);
             }
@@ -86,7 +84,7 @@ namespace A2.Controllers
             if (account == null)
             {
                 ModelState.AddModelError("Amount", "You have insufficient Balance for that transaction.");
-                return View(nameof(ATM), ReturnAtmViewModel(amount));
+                return View(nameof(ATM), ReturnAtmViewModel(amount).Result);
             }
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Home));
@@ -166,19 +164,6 @@ namespace A2.Controllers
             return payBillViewModel;
         }
         /// <summary>
-        /// Builds a bill model file by searching database for the ID of the bill passed in and returns the updatebill view of
-        /// the specified bill
-        /// </summary>
-        /// <param name="id">id of the bill you want to update.</param>
-        [Route("Bills/Update")]
-        public async Task<IActionResult> UpdateBill(int id)
-        {
-            var bill = await _context.BillPay.FirstOrDefaultAsync(x => x.BillPayID == id);
-
-            return View("UpdateBill", bill);
-        }
-
-        /// <summary>
         /// AddPayBillTransaction collects data from the PayBill view and validates it, if valid it adds the specified billpay to
         /// the accounts billpay list and redirects the user to the BillPays view. If unsucessful it reloads the PayBill view
         /// displaying the error.
@@ -190,16 +175,17 @@ namespace A2.Controllers
             {
                 ModelState.AddModelError("DateError", "You cannot schedule a date in the past.");
             }
-            var payeeIDObject = await _context.Payee.FindAsync(payeeID);
+            var payeeIDObject = await _context.Payee.FirstOrDefaultAsync(x => x.PayeeID == payeeID);
             if (payeeIDObject == null)
             {
                 ModelState.AddModelError("PayeeID", "That PayeeID does not exist.");
             }
             if (!ModelState.IsValid)
             {
-                return View(nameof(PayBill), ReturnPayBillViewModel(amount));
+                return View(nameof(PayBill), ReturnPayBillViewModel(amount).Result);
             }
-            var account = await _context.Account.FindAsync(accountNumber);
+            var account = await _context.Account.Include(x => x.BillPay).
+                FirstOrDefaultAsync(x => x.AccountNumber == accountNumber);
             account.BillPay.Add(new BillPay()
             {
                 AccountNumber = accountNumber,
@@ -211,6 +197,7 @@ namespace A2.Controllers
                 Status = StatusType.Awaiting
             });
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(BillPays));
         }
         /// <summary>
@@ -242,6 +229,79 @@ namespace A2.Controllers
             }
 
             return View(billPaysViewModels);
+        }
+        /// <summary>
+        /// Builds a bill model file by searching database for the ID of the bill passed in and returns the updatebill view of
+        /// the specified bill
+        /// </summary>
+        /// <param name="id">id of the bill you want to update.</param>
+        [Route("Bills/Update")]
+        public async Task<IActionResult> UpdateBill(int id)
+        {
+            var updateViewModel = await ReturnUpdateViewModel(id);
+            if (updateViewModel == null)
+            {
+                return RedirectToAction(nameof(BillPays));
+            }
+            return View("UpdateBill", updateViewModel);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdatePayBillTransaction([Bind("BillPayID, AccountNumber, PayeeID, Amount, ScheduleDate, Period")] UpdateBillPayViewModel updateBillPays)
+        {
+            Console.WriteLine(updateBillPays.ScheduleDate + " date now:" + DateTime.Now);
+            if (updateBillPays.ScheduleDate.CompareTo(DateTime.Now) < 0)
+            {
+                ModelState.AddModelError("DateError", "You cannot schedule a date in the past.");
+            }
+            var payeeIDObject = await _context.Payee.FirstOrDefaultAsync(x => x.PayeeID == updateBillPays.PayeeID);
+            if (payeeIDObject == null)
+            {
+                ModelState.AddModelError("PayeeID", "That PayeeID does not exist.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View("UpdateBill", ReturnUpdateViewModel(updateBillPays.BillPayID).Result);
+            }
+            BillPay billPay = new BillPay()
+            {
+                BillPayID = updateBillPays.BillPayID,
+                AccountNumber = updateBillPays.AccountNumber,
+                PayeeID = updateBillPays.PayeeID,
+                Amount = updateBillPays.Amount,
+                ScheduleDate = updateBillPays.ScheduleDate,
+                Period = updateBillPays.Period,
+                ModifyDate = DateTime.Now,
+                Status = StatusType.Awaiting
+            };
+            _context.Update(billPay);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(BillPays));
+        }
+
+        private async Task<UpdateBillPayViewModel> ReturnUpdateViewModel(int id)
+        {
+            var bill = await _context.BillPay.FirstOrDefaultAsync(x => x.BillPayID == id);
+            if (bill.Status == StatusType.Complete || bill == null)
+            {
+                return null;
+            }
+            var payee = await _context.Payee.ToListAsync();
+            var updateBillPayViewModel = new UpdateBillPayViewModel()
+            {
+                BillPayID = bill.BillPayID,
+                AccountNumber = bill.AccountNumber,
+                PayeeID = bill.PayeeID,
+                Amount = bill.Amount,
+                ScheduleDate = bill.ScheduleDate,
+                Period = bill.Period,
+                ModifyDate = bill.ModifyDate,
+                Status = bill.Status,
+                Payees = payee
+            };
+            ViewBag.Amount = bill.Amount;
+
+            return updateBillPayViewModel;
         }
     }
 }

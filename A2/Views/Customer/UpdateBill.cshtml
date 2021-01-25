@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Http
-@model BillPay
+@model UpdateBillPayViewModel
 @{
     ViewData["Title"] = "Update Bill";
 }
@@ -7,15 +7,18 @@
 <img src="~/images/transfer.svg" asp-append-version="true" style="z-index: -1; position: absolute;">
 <div class="row mt-3 ">
     <div class="col-md-6 offset-md-3 px-5 py-5 my-5 rounded text-light bg-dark">
-        <h1 class="display-4 text-left pb-3">Update Bill Pay</h1>
-        <p>Bill pay details:</p>
-
-        <form asp-action="">
+        <h1 class="display-4 text-left pb-3">Update Bill Pay for BillID: @Model.BillPayID</h1>
+        <form method="post" asp-action="UpdatePayBillTransaction" asp-controller="Customer">
             <div class="form-group">
-                <label asp-for="PayeeID" class="control-label"></label>
-                <input asp-for="PayeeID" class="form-control" data-val="true"
-                       data-val-required="The PayeeID field is required." value="@Model.PayeeID" />
-                <span asp-validation-for="PayeeID" class="text-danger"></span>
+                <input type="hidden" asp-for="BillPayID" />
+                <input type="hidden" asp-for="AccountNumber" />
+                <label asp-for="PayeeID" for="payeeID" class="form-label">Please select your Payee:</label>
+                <select class="form-select form-control" aria-label="Default select example" asp-for="PayeeID">
+                    @foreach (var payee in Model.Payees)
+                    {
+                        <option value=@payee.PayeeID>@Html.DisplayFor(x => payee.PayeeName) [@Html.DisplayFor(x => payee.PayeeID)]</option>
+                    }
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="Amount" class="control-label"></label>
@@ -24,15 +27,16 @@
                        data-val-required="The Amount field is required." />
                 <span asp-validation-for="Amount" class="text-danger"></span>
             </div>
+            <label class="control-label">Previous Scheduled Date: <strong>@Model.ScheduleDate.ToLocalTime()</strong></label>
             <div class="form-group">
-                <label class="control-label">Scheduled Date</label>
-                <input type="datetime-local" asp-format="{0:dd/MM/yyyy HH:mm}" class="form-control"
-                       data-val-required="The Date field is required." value="@Model.ScheduleDate.ToLocalTime()" />
+                <label asp-for="ScheduleDate" class="control-label"></label>
+                <input type="datetime-local" asp-for="ScheduleDate" asp-format="{0:dd/MM/yyyy HH:mm}" class="form-control"
+                       data-val-required="The Date field is required." />
                 @Html.ValidationMessage("DateError", new { @class = "text-danger" })
             </div>
             <div class="form-group">
                 <label asp-for="Period" class="control-label"></label>
-                <select asp-for="Period" class="form-select form-control" name="Period" id="Period" aria-label="Default select example">
+                <select asp-for="Period" class="form-select form-control" aria-label="Default select example">
                     <option selected value="S">Once off</option>
                     <option value="M">Monthly</option>
                     <option value="Q">Quarterly</option>
