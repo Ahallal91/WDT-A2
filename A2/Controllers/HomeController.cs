@@ -34,10 +34,10 @@ namespace A2.Controllers
         /// <summary>
         /// Displays error code pages.
         /// </summary>
-        [HttpGet("/error/{errorCode}")]
+/*        [HttpGet("/error/{errorCode}")]
         public IActionResult ErrorCode(int errorCode)
         {
             return View(errorCode);
-        }
+        }*/
     }
 }

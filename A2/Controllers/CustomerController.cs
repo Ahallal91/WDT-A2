@@ -12,6 +12,7 @@ using Utilities;
 using A2.Controllers.BusinessObject;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using A2.ViewModel;
+using X.PagedList;
 
 namespace A2.Controllers
 {
@@ -21,6 +22,7 @@ namespace A2.Controllers
         private readonly A2Context _context;
         private int CustomerID => HttpContext.Session.GetInt32(nameof(Customer.CustomerID)).Value;
         public CustomerController(A2Context context) => _context = context;
+        [Route("Home")]
         public async Task<IActionResult> Home()
         {
             var customer = await _context.Customer.Include(x => x.Accounts).
@@ -30,6 +32,7 @@ namespace A2.Controllers
         /// <summary>
         /// Returns the view for the ATM page as an ATMViewModel with customer of the current session.
         /// </summary>
+        [Route("ATM")]
         public async Task<IActionResult> ATM()
         {
             return View(nameof(ATM), await ReturnAtmViewModel(0));
@@ -103,12 +106,34 @@ namespace A2.Controllers
             ViewBag.Amount = amount;
             return atmViewModel;
         }
-
-        public async Task<IActionResult> Transaction(int id) => View(await _context.Account.FindAsync(id));
         /// <summary>
         /// PayBill returns the view for the PayBill page as a PayBillViewModel with the Customer of the session
         /// and all available payees in the database loaded.
         /// </summary>
+        public async Task<IActionResult> Transaction(int id, int? page = 1)
+        {
+            // handles display of transactions per page
+            const int pageSize = 4;
+            var customer = await _context.Customer.Include(x => x.Accounts).
+                FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
+            // gets transactions of selected account in pagedList form
+            var pagedTransactionList = await _context.Transaction.Where(X => X.AccountNumber == id).ToPagedListAsync(page, pageSize);
+
+            var transactionsViewModel = new TransactionsViewModel()
+            {
+                Customer = customer,
+                AccountNumber = id,
+                Transactions = pagedTransactionList
+            };
+
+            return View(transactionsViewModel);
+        }
+
+        /// <summary>
+        /// PayBill returns the view for the PayBill page as a PayBillViewModel with the Customer of the session
+        /// and all available payees in the database loaded.
+        /// </summary>
+        [Route("Bills")]
         public async Task<IActionResult> PayBill()
         {
             return View(await ReturnPayBillViewModel(0));
@@ -135,6 +160,7 @@ namespace A2.Controllers
         /// the specified bill
         /// </summary>
         /// <param name="id">id of the bill you want to update.</param>
+        [Route("Bills/Update")]
         public async Task<IActionResult> UpdateBill(int id)
         {
             var bill = await _context.BillPay.FirstOrDefaultAsync(x => x.BillPayID == id);
@@ -182,6 +208,7 @@ namespace A2.Controllers
         /// BillPay information. This is used to display all the bills to the user so they can see billpay information. The view for this
         /// page should refresh automatically to inform user in real-time when the background service updates bills.
         /// </summary>
+        [Route("Bills/View")]
         public async Task<IActionResult> BillPays()
         {
             var customer = await _context.Customer.FindAsync(CustomerID);

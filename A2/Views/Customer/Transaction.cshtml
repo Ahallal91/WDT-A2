@@ -1,0 +1,56 @@
+﻿@*
+    Reference:   NorthwindWithPagingExample week 7
+*@
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Core.Common
+@model TransactionsViewModel
+@{
+    ViewData["Title"] = "View Transactions";
+}
+
+<div>
+    <form method="post" class="form-group">
+        <label for="id" class="form-label">Please select your Account:</label>
+        <select class="form-select form-control" name="id" id="id" aria-label="Default select example" onchange="this.form.submit();">
+            <option value="" selected disabled hidden>Choose Account</option>
+            @foreach (var acc in Model.Customer.Accounts)
+            {
+                <option value=@acc.AccountNumber>@Html.DisplayFor(x => acc.AccountNumber) [@Html.DisplayFor(x => acc.AccountType)]</option>
+            }
+        </select>
+    </form>
+    @{
+        decimal balance = Math.Round(Model.Customer.Accounts.Find(x => x.AccountNumber == Model.AccountNumber).Balance, 2);
+    }
+    <h1>Transactions for Account Number: @Model.AccountNumber</h1>
+    <h1>Balance: $@balance</h1>
+    <table class="table">
+        <tr>
+            <th>@Html.DisplayNameFor(x => x.Transactions[0].TransactionID)</th>
+            <th>@Html.DisplayNameFor(x => x.Transactions[0].TransactionType)</th>
+            <th>@Html.DisplayNameFor(x => x.Transactions[0].DestinationAccount)</th>
+            <th>@Html.DisplayNameFor(x => x.Transactions[0].Amount)</th>
+            <th>@Html.DisplayNameFor(x => x.Transactions[0].Comment)</th>
+            <th>@Html.DisplayNameFor(x => x.Transactions[0].ModifyDate)</th>
+        </tr>
+        @foreach (var transaction in Model.Transactions)
+        {
+            <tr>
+                <td>@Html.DisplayFor(x => transaction.TransactionID)</td>
+                <td>@Html.DisplayFor(x => transaction.TransactionType)</td>
+                <td>@Html.DisplayFor(x => transaction.DestinationAccount)</td>
+                <td>@Html.DisplayFor(x => transaction.Amount)</td>
+                <td>@Html.DisplayFor(x => transaction.Comment)</td>
+                <td>@Html.DisplayFor(x => transaction.ModifyDate)</td>
+            </tr>
+        }
+    </table>
+
+    @Html.PagedListPager(Model.Transactions, page => Url.Action("Transaction", new { page }),
+        new PagedListRenderOptions
+            {
+            LiElementClasses = new[] { "page-item" },
+            PageClasses = new[] { "page-link" }
+        })
+</div>

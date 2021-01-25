@@ -22,7 +22,7 @@
                         <td>@Html.DisplayFor(x => acc.AccountNumber)</td>
                         <td>@Html.DisplayFor(x => acc.AccountType)</td>
                         <td>@Html.DisplayFor(x => acc.Balance)</td>
-                        <td><a class=" btn btn-primary btn-block" asp-area="" asp-controller="Home" asp-route-id="@acc.AccountNumber" asp-action="Transaction">View</a></td>
+                        <td><a class=" btn btn-primary btn-block" asp-area="" asp-controller="Customer" asp-route-id="@acc.AccountNumber" asp-action="Transaction">View</a></td>
                     </tr>
                 }
             </tbody>
