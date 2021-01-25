@@ -37,7 +37,10 @@ namespace A2.Controllers
         [HttpGet("/error/{errorCode}")]
         public IActionResult ErrorCode(int errorCode)
         {
-            return View(errorCode);
+            return View(new ErrorViewModel()
+            {
+                ErrorCode = errorCode
+            });
         }
     }
 }
