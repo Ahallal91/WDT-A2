@@ -24,7 +24,7 @@ namespace A2.Models
         [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Ente a valid name")]
         [StringLength(50)]
         public string CustomerName { get; set; }
-        [RegularExpression("[0-9]\\d{10}", ErrorMessage = "Enter a valid 11 digit TFN.")]
+        [RegularExpression("[0-9]\\d{9}", ErrorMessage = "Enter a valid 9 digit TFN.")]
         [StringLength(11)]
         public string TFN { get; set; }
         [StringLength(50)]

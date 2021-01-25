@@ -32,13 +32,7 @@ namespace A2.Controllers
         /// </summary>
         public async Task<IActionResult> ATM()
         {
-            var customer = await _context.Customer.Include(x => x.Accounts).
-                FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
-            var atmViewModel = new ATMViewModel()
-            {
-                Customer = customer,
-            };
-            return View(atmViewModel);
+            return View(nameof(ATM), await ReturnAtmViewModel(0));
         }
         /// <summary>
         /// ATMTransaction method takes data from the ATM view and validates it. It then performs a deposit/withdraw/transfer depending
@@ -48,11 +42,10 @@ namespace A2.Controllers
         [HttpPost]
         public async Task<IActionResult> ATMTransaction(int accountNumber, string toAccountNumber, decimal amount, string transactionType, string comment)
         {
-            var customer = await _context.Customer.Include(x => x.Accounts).
-                FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
+
 
             AccountLogic processTransaction = new AccountLogic();
-            var account = await _context.Account.FindAsync(accountNumber);
+            var account = await _context.Account.Include(x => x.Transactions).FirstOrDefaultAsync(x => x.AccountNumber == accountNumber);
 
             Account toAccount = null;
             if (transactionType == nameof(processTransaction.Transfer))
@@ -75,12 +68,7 @@ namespace A2.Controllers
                 }
                 if (!ModelState.IsValid)
                 {
-                    var atmViewModel = new ATMViewModel()
-                    {
-                        Customer = customer,
-                    };
-                    ViewBag.Amount = amount;
-                    return View("ATM", atmViewModel);
+                    return View(nameof(ATM), ReturnAtmViewModel(amount));
                 }
                 account = processTransaction.Transfer(amount, account, toAccount, comment);
             }
@@ -95,16 +83,27 @@ namespace A2.Controllers
             if (account == null)
             {
                 ModelState.AddModelError("Amount", "You have insufficient Balance for that transaction.");
-                var atmViewModel = new ATMViewModel()
-                {
-                    Customer = customer,
-                };
-                ViewBag.Amount = amount;
-                return View(nameof(ATM), atmViewModel);
+                return View(nameof(ATM), ReturnAtmViewModel(amount));
             }
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Home));
         }
+        /// <summary>
+        /// Calls customer model from database and returns an ATMviewModel of the customer with updated viewbag amount.
+        /// </summary>
+        /// <param name="amount">The default amount you want to show in viewbag.</param>
+        private async Task<ATMViewModel> ReturnAtmViewModel(decimal amount)
+        {
+            var customer = await _context.Customer.Include(x => x.Accounts).
+                FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
+            var atmViewModel = new ATMViewModel()
+            {
+                Customer = customer,
+            };
+            ViewBag.Amount = amount;
+            return atmViewModel;
+        }
+
         public async Task<IActionResult> Transaction(int id) => View(await _context.Account.FindAsync(id));
         /// <summary>
         /// PayBill returns the view for the PayBill page as a PayBillViewModel with the Customer of the session
@@ -112,17 +111,30 @@ namespace A2.Controllers
         /// </summary>
         public async Task<IActionResult> PayBill()
         {
+            return View(await ReturnPayBillViewModel(0));
+        }
+        /// <summary>
+        /// Gets customer and payee information from database and returns a PayBillViewModel with this data.
+        /// </summary>
+        /// <param name="amount">The amount you want the viewbag to show by default.</param>
+        private async Task<PayBillViewModel> ReturnPayBillViewModel(decimal amount)
+        {
             var customer = await _context.Customer.Include(x => x.Accounts).
                 FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
             var payee = await _context.Payee.ToListAsync();
             var payBillViewModel = new PayBillViewModel()
             {
                 Customer = customer,
-                Payee = payee
+                Payee = payee,
             };
-            return View(payBillViewModel);
+            ViewBag.Amount = amount;
+            return payBillViewModel;
         }
-
+        /// <summary>
+        /// Builds a bill model file by searching database for the ID of the bill passed in and returns the updatebill view of
+        /// the specified bill
+        /// </summary>
+        /// <param name="id">id of the bill you want to update.</param>
         public async Task<IActionResult> UpdateBill(int id)
         {
             var bill = await _context.BillPay.FirstOrDefaultAsync(x => x.BillPayID == id);
@@ -149,14 +161,7 @@ namespace A2.Controllers
             }
             if (!ModelState.IsValid)
             {
-                var customer = await _context.Customer.Include(x => x.Accounts).
-                    FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
-                var payBillViewModel = new PayBillViewModel()
-                {
-                    Customer = customer,
-                };
-                ViewBag.Amount = amount;
-                return View(nameof(PayBill), payBillViewModel);
+                return View(nameof(PayBill), ReturnPayBillViewModel(amount));
             }
             var account = await _context.Account.FindAsync(accountNumber);
             account.BillPay.Add(new BillPay()
