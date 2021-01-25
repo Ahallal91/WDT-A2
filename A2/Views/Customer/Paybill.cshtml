@@ -9,8 +9,8 @@
         <h1 class="display-4 text-left pb-3">Schedule Bill Pay</h1>
         <form asp-action="AddPayBillTransaction">
             <div class="form-group">
-                <label for="accountNumber" class="form-label">Please select your Account:</label>
-                <select class="form-select form-control" name="accountNumber" id="accountNumber" aria-label="Default select example">
+                <label asp-for="AccountNumber" class="form-label">Please select your Account:</label>
+                <select class="form-select form-control" aria-label="Default select example" asp-for="AccountNumber">
 
                     @foreach (var acc in Model.Customer.Accounts)
                     {
@@ -19,8 +19,8 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="payeeID" class="form-label">Please select your Payee:</label>
-                <select class="form-select form-control" name="payeeID" id="payeeID" aria-label="Default select example">
+                <label asp-for="PayeeID" class="form-label">Please select your Payee:</label>
+                <select class="form-select form-control" asp-for="PayeeID" aria-label="Default select example">
 
                     @foreach (var payee in Model.Payee)
                     {
@@ -30,7 +30,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Amount" class="control-label"></label>
-                <input asp-for="Amount" id="Amount" name="Amount" class="form-control" value="@ViewBag.Amount?.ToString("0.00")"
+                <input asp-for="Amount" class="form-control" value="@ViewBag.Amount?.ToString("0.00")"
                        data-val="true" data-val-number="The field Amount must be a number."
                        data-val-required="The Amount field is required." />
                 <span asp-validation-for="Amount" class="text-danger"></span>
@@ -44,7 +44,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Period" class="control-label"></label>
-                <select asp-for="Period" class="form-select form-control" name="Period" id="Period" aria-label="Default select example">
+                <select asp-for="Period" class="form-select form-control" aria-label="Default select example">
                     <option selected value="S">Once off</option>
                     <option value="M">Monthly</option>
                     <option value="Q">Quarterly</option>

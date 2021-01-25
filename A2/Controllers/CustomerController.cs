@@ -169,30 +169,30 @@ namespace A2.Controllers
         /// displaying the error.
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> AddPayBillTransaction(int accountNumber, int payeeID, decimal amount, DateTime scheduledDate, string period)
+        public async Task<IActionResult> AddPayBillTransaction([Bind("AccountNumber, PayeeID, Amount, ScheduledDate, Period")] PayBillViewModel payBill)
         {
-            if (scheduledDate.CompareTo(DateTime.Now) < 0)
+            if (payBill.ScheduledDate.CompareTo(DateTime.Now) < 0)
             {
                 ModelState.AddModelError("DateError", "You cannot schedule a date in the past.");
             }
-            var payeeIDObject = await _context.Payee.FirstOrDefaultAsync(x => x.PayeeID == payeeID);
+            var payeeIDObject = await _context.Payee.FirstOrDefaultAsync(x => x.PayeeID == payBill.PayeeID);
             if (payeeIDObject == null)
             {
                 ModelState.AddModelError("PayeeID", "That PayeeID does not exist.");
             }
             if (!ModelState.IsValid)
             {
-                return View(nameof(PayBill), ReturnPayBillViewModel(amount).Result);
+                return View(nameof(PayBill), ReturnPayBillViewModel(payBill.Amount).Result);
             }
             var account = await _context.Account.Include(x => x.BillPay).
-                FirstOrDefaultAsync(x => x.AccountNumber == accountNumber);
+                FirstOrDefaultAsync(x => x.AccountNumber == payBill.AccountNumber);
             account.BillPay.Add(new BillPay()
             {
-                AccountNumber = accountNumber,
-                PayeeID = payeeID,
-                Amount = amount,
-                ScheduleDate = scheduledDate,
-                Period = period,
+                AccountNumber = payBill.AccountNumber,
+                PayeeID = payBill.PayeeID,
+                Amount = payBill.Amount,
+                ScheduleDate = payBill.ScheduledDate,
+                Period = payBill.Period,
                 ModifyDate = DateTime.Now,
                 Status = StatusType.Awaiting
             });

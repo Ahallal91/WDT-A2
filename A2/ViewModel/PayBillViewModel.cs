@@ -10,8 +10,10 @@ namespace A2.ViewModel
     public class PayBillViewModel
     {
         public Customer Customer { get; set; }
+        [RegularExpression(@"^\d{4}$", ErrorMessage = "Account numbers must be 4 digits")]
+        public int AccountNumber { get; set; }
         [RegularExpression(@"^[0-9]*$", ErrorMessage = "PayeeID must be only numbers.")]
-        public string PayeeID { get; set; }
+        public int PayeeID { get; set; }
         public List<Payee> Payee { get; set; }
         [Required]
         [DataType(DataType.Currency)]
