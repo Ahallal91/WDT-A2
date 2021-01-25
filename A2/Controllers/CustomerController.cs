@@ -107,15 +107,25 @@ namespace A2.Controllers
             return atmViewModel;
         }
         /// <summary>
-        /// PayBill returns the view for the PayBill page as a PayBillViewModel with the Customer of the session
-        /// and all available payees in the database loaded.
+        /// Transaction returns a TransactionViewModel with the current session customer, their
+        /// selected account via id or a default account if going from navigation bar. And a PagedList of transactions
+        /// for that account. Page number is set to 1 by default if not supplied
+        /// Reference: NorthwindWithPagingExample week 7
         /// </summary>
+        /// <param name="id">account number id of the account to show transactions of</param>
+        /// <param name="page">The pagination page for transactions</param>
+        [Route("Transaction")]
         public async Task<IActionResult> Transaction(int id, int? page = 1)
         {
             // handles display of transactions per page
             const int pageSize = 4;
             var customer = await _context.Customer.Include(x => x.Accounts).
                 FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
+            // sets default account to first account if no account id
+            if (id == 0)
+            {
+                id = customer.Accounts.First().AccountNumber;
+            }
             // gets transactions of selected account in pagedList form
             var pagedTransactionList = await _context.Transaction.Where(X => X.AccountNumber == id).ToPagedListAsync(page, pageSize);
 
@@ -128,7 +138,6 @@ namespace A2.Controllers
 
             return View(transactionsViewModel);
         }
-
         /// <summary>
         /// PayBill returns the view for the PayBill page as a PayBillViewModel with the Customer of the session
         /// and all available payees in the database loaded.
