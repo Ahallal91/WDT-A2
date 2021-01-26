@@ -11,7 +11,7 @@ namespace WebAPI.Model.Repository
     public interface IDataRepository<TEntity, TKey> where TEntity : class
     {
         IEnumerable<TEntity> GetAll();
-        IEnumerable<TEntity> GetAll(TKey id);
+        IEnumerable<TEntity> GetAllByID(TKey id);
         TKey Update(TKey id, TEntity item);
     }
 }

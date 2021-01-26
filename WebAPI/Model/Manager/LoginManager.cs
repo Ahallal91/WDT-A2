@@ -21,14 +21,17 @@ namespace WebAPI.Model.Manager
             return _context.Logins.ToList();
         }
 
-        public IEnumerable<Login> GetAll(int id)
+        public IEnumerable<Login> GetAllByID(int id)
         {
-            throw new NotImplementedException();
+            return _context.Logins.ToList().Where(x => x.LoginId == id.ToString());
         }
 
-        public int Update(int id, Login item)
+        public int Update(int id, Login login)
         {
-            throw new NotImplementedException();
+            _context.Update(login);
+            _context.SaveChanges();
+
+            return id;
         }
     }
 }
