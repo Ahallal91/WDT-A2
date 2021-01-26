@@ -26,36 +26,46 @@ namespace Admin.Controllers
             return View(login);
         }
 
-
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
                 return NotFound();
 
             var login = await JsonByAPI.ReturnDeserialisedObject<LoginDto>(Client, $"{getLoginAPI}/{id}");
-
-            return View(login);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, LoginDto login)
-        {
-            if (id != int.Parse(login.LoginID))
+            if (!login.Any())
+            {
                 return NotFound();
-            if (login.PasswordHash.Length != 64)
-            {
-                ModelState.AddModelError("InvalidPassword", "Invalid password hash");
             }
-            if (ModelState.IsValid)
-            {
-                var response = JsonByAPI.ReturnResponseEditObject(Client, getLoginAPI, login);
+            TimedSwapLoginAction(login[0]);
 
-                if (response.IsSuccessStatusCode)
-                {
-                    return RedirectToAction(nameof(Index));
-                }
+            return RedirectToAction(nameof(Index));
+        }
+        private async void TimedSwapLoginAction(LoginDto login)
+        {
+            SwapLoginActionType(ref login);
+            var response = JsonByAPI.ReturnResponseEditObject(Client, getLoginAPI, login);
+            if (!response.IsSuccessStatusCode)
+            {
+                ModelState.AddModelError("LoginEditFailed", "Unexpected error occured whilst accessing login.");
+                return;
             }
-            return View(login);
+            if (login.Status == ActiveType.Locked)
+            {
+                await Task.Delay(TimeSpan.FromMinutes(1));
+                SwapLoginActionType(ref login);
+                JsonByAPI.ReturnResponseEditObject(Client, getLoginAPI, login);
+            }
+        }
+        private void SwapLoginActionType(ref LoginDto login)
+        {
+            if (login.Status == ActiveType.Unlocked)
+            {
+                login.Status = ActiveType.Locked;
+            }
+            else
+            {
+                login.Status = ActiveType.Unlocked;
+            }
         }
     }
 }

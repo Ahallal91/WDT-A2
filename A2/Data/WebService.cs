@@ -111,7 +111,7 @@ namespace A2.Data
                     CustomerID = log.CustomerID,
                     PasswordHash = log.PasswordHash,
                     ModifyDate = DateTime.UtcNow,
-                    Status = ActiveType.Unblocked,
+                    Status = ActiveType.Unlocked,
                 });
             }
             context.SaveChanges();

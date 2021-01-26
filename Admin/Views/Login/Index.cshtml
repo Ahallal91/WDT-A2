@@ -1,9 +1,10 @@
 ﻿@model IEnumerable<LoginDto>
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Logins";
 }
 
 <h1>Login Index</h1>
+@Html.ValidationMessage("LoginEditFailed", new { @class = "text-danger" })
 <table class="table">
     <thead>
         <tr>
@@ -54,3 +55,7 @@
         }
     </tbody>
 </table>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

@@ -30,6 +30,11 @@ namespace A2.Controllers
                 ModelState.AddModelError("LoginFailed", "Invalid LoginID or password, please try again.");
                 return View(new Login { LoginID = loginID });
             }
+            if (login.Status == ActiveType.Locked)
+            {
+                ModelState.AddModelError("LoginFailed", "Your account has been locked, please contact the Administrator.");
+                return View(new Login { LoginID = loginID });
+            }
 
             // Set customerID and customerName in the session after sucessful login.
             HttpContext.Session.SetInt32(nameof(Customer.CustomerID), login.CustomerID);
