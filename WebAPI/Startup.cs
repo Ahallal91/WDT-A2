@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebAPI.Data;
+using WebAPI.Model.Manager;
 
 namespace WebAPI
 {
@@ -32,7 +33,9 @@ namespace WebAPI
             {
                 options.UseSqlServer(Configuration.GetConnectionString(nameof(s3811836_a2Context)));
             });
-
+            services.AddScoped<BillPaysManager>();
+            services.AddScoped<LoginManager>();
+            services.AddScoped<TransactionsManager>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
