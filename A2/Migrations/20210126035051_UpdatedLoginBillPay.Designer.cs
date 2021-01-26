@@ -4,14 +4,16 @@ using A2.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace A2.Migrations
 {
     [DbContext(typeof(A2Context))]
-    partial class A2ContextModelSnapshot : ModelSnapshot
+    [Migration("20210126035051_UpdatedLoginBillPay")]
+    partial class UpdatedLoginBillPay
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

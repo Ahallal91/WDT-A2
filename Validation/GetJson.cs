@@ -20,7 +20,6 @@ namespace Utilities
             var json = "";
             try
             {
-
                 HttpResponseMessage response = await client.GetAsync(URL);
                 response.EnsureSuccessStatusCode();
                 json = response.Content.ReadAsStringAsync().Result;

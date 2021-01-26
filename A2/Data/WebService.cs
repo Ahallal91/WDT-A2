@@ -73,7 +73,7 @@ namespace A2.Data
                         AccountType = acc.AccountType,
                         CustomerID = cust.CustomerID,
                         Balance = acc.Balance,
-                        ModifyDate = DateTime.UtcNow
+                        ModifyDate = DateTime.Now
                     });
                     foreach (var tran in acc.Transactions)
                     {
@@ -83,7 +83,7 @@ namespace A2.Data
                             AccountNumber = acc.AccountNumber,
                             Amount = acc.Balance,
                             Comment = comment,
-                            ModifyDate = tran.TransactionTimeUtc.ToUniversalTime()
+                            ModifyDate = tran.TransactionTimeUtc
                         });
                     }
                 }
@@ -110,7 +110,8 @@ namespace A2.Data
                     LoginID = log.LoginID,
                     CustomerID = log.CustomerID,
                     PasswordHash = log.PasswordHash,
-                    ModifyDate = DateTime.UtcNow
+                    ModifyDate = DateTime.UtcNow,
+                    Status = ActiveType.Unblocked,
                 });
             }
             context.SaveChanges();

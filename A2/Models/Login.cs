@@ -14,6 +14,12 @@ namespace A2.Models
     /// To ensure login information is immutable in the system unless specifically specified (such as updated password)
     /// a record form of Login Model is more secure and prevents the classes attributes changing unnecessarily.
     /// </summary>
+    /// 
+    public enum ActiveType
+    {
+        Unblocked = 1,
+        Blocked = 2
+    }
     public record Login
     {
         [Required]
@@ -34,5 +40,6 @@ namespace A2.Models
 
         [Required, StringLength(20)]
         public DateTime ModifyDate { get; set; }
+        public ActiveType Status { get; set; }
     }
 }

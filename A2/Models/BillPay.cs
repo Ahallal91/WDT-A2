@@ -11,7 +11,8 @@ namespace A2.Models
     {
         Awaiting = 1,
         Failed = 2,
-        Complete = 3
+        Complete = 3,
+        Blocked = 4
     }
     public class BillPay
     {
