@@ -1,0 +1,56 @@
+﻿@model IEnumerable<LoginDto>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Login Index</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.LoginID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModifyDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LoginID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CustomerID)
+                </td>
+                <td>
+                    @{
+                        DateTime date = item.ModifyDate.ToLocalTime();
+                    }
+                    @date
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @if (item.Status == ActiveType.Unlocked)
+                    {
+                        <a asp-action="Edit" asp-controller="Login" asp-route-id="@item.LoginID">Block</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Edit" asp-controller="Login" asp-route-id="@item.LoginID">Unblock</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

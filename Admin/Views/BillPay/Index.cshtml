@@ -1,0 +1,83 @@
+﻿@model IEnumerable<BillPayDto>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>BillPay Index</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BillPayID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PayeeID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ScheduleDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Period)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModifyDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BillPayID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AccountNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PayeeID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    @{
+                        DateTime sDate = item.ScheduleDate.ToLocalTime();
+                    }
+                    @sDate
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Period)
+                </td>
+                <td>
+                    @{
+                        DateTime mDate = item.ModifyDate.ToLocalTime();
+                    }
+                    @mDate
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @if (item.Status != StatusType.Blocked)
+                    {
+                        <a asp-action="Edit" asp-controller="BillPay" asp-route-id="@item.BillPayID">Block</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Edit" asp-controller="BillPay" asp-route-id="@item.BillPayID">Unblock</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

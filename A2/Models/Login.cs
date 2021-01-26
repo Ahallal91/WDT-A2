@@ -17,8 +17,8 @@ namespace A2.Models
     /// 
     public enum ActiveType
     {
-        Unblocked = 1,
-        Blocked = 2
+        Unlocked = 1,
+        Locked = 2
     }
     public record Login
     {

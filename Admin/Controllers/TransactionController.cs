@@ -19,14 +19,14 @@ namespace Admin.Controllers
         private HttpClient Client => _clientFactory.CreateClient("api");
         public TransactionController(IHttpClientFactory clientFactory) => _clientFactory = clientFactory;
 
-        public async Task<IActionResult> AllTransactions()
+        public async Task<IActionResult> Index()
         {
             var transactions = await JsonByAPI.ReturnDeserialisedObject<TransactionDto>(Client, getTransactionAPI);
 
             return View(transactions);
         }
 
-        public async Task<IActionResult> TransactionsByUser(int? id)
+        public async Task<IActionResult> Filter(int? id)
         {
             if (id == null)
                 return NotFound();

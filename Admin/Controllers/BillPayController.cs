@@ -18,7 +18,7 @@ namespace Admin.Controllers
         private HttpClient Client => _clientFactory.CreateClient("api");
         public BillPayController(IHttpClientFactory clientFactory) => _clientFactory = clientFactory;
 
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> Index()
         {
             var billPay = await JsonByAPI.ReturnDeserialisedObject<BillPayDto>(Client, getBillPayAPI);
 
@@ -26,7 +26,7 @@ namespace Admin.Controllers
         }
 
 
-        public async Task<IActionResult> Lock(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -50,7 +50,7 @@ namespace Admin.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return RedirectToAction(nameof(All));
+                    return RedirectToAction(nameof(Index));
                 }
             }
             return View(billPay);

@@ -19,7 +19,7 @@ namespace Admin.Controllers
         private HttpClient Client => _clientFactory.CreateClient("api");
         public LoginController(IHttpClientFactory clientFactory) => _clientFactory = clientFactory;
 
-        public async Task<IActionResult> AllLogins()
+        public async Task<IActionResult> Index()
         {
             var login = await JsonByAPI.ReturnDeserialisedObject<LoginDto>(Client, getLoginAPI);
 
@@ -27,7 +27,7 @@ namespace Admin.Controllers
         }
 
 
-        public async Task<IActionResult> Lock(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
                 return NotFound();
@@ -52,7 +52,7 @@ namespace Admin.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return RedirectToAction(nameof(AllLogins));
+                    return RedirectToAction(nameof(Index));
                 }
             }
             return View(login);
