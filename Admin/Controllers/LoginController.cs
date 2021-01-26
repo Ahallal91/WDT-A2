@@ -1,33 +1,61 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Admin.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Text;
+using Admin.Util;
 
 namespace Admin.Controllers
 {
     public class LoginController : Controller
     {
+        private const string getLoginAPI = "/api/Login";
+
         private readonly IHttpClientFactory _clientFactory;
         private HttpClient Client => _clientFactory.CreateClient("api");
         public LoginController(IHttpClientFactory clientFactory) => _clientFactory = clientFactory;
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> AllLogins()
         {
-            var response = await Client.GetAsync("api/movies");
-            //var response = await MovieApi.InitializeClient().GetAsync("api/movies");
+            var login = await JsonByAPI.ReturnDeserialisedObject<LoginDto>(Client, getLoginAPI);
 
-            if (!response.IsSuccessStatusCode)
-                throw new Exception();
+            return View(login);
+        }
 
-            // Storing the response details received from web api.
-            var result = await response.Content.ReadAsStringAsync();
 
-            // Deserializing the response received from web api and storing into a list.
-            var movies = JsonConvert.DeserializeObject<List<MovieDto>>(result);
+        public async Task<IActionResult> Lock(int? id)
+        {
+            if (id == null)
+                return NotFound();
 
-            return View(movies);
+            var login = await JsonByAPI.ReturnDeserialisedObject<LoginDto>(Client, $"{getLoginAPI}/{id}");
+
+            return View(login);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, LoginDto login)
+        {
+            if (id != int.Parse(login.LoginID))
+                return NotFound();
+            if (login.PasswordHash.Length != 64)
+            {
+                ModelState.AddModelError("InvalidPassword", "Invalid password hash");
+            }
+            if (ModelState.IsValid)
+            {
+                var response = JsonByAPI.ReturnResponseEditObject(Client, getLoginAPI, login);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return RedirectToAction(nameof(AllLogins));
+                }
+            }
+            return View(login);
         }
     }
 }
