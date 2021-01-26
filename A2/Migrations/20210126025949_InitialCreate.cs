@@ -98,7 +98,8 @@ namespace A2.Migrations
                     Amount = table.Column<decimal>(type: "money", nullable: false),
                     ScheduleDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Period = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: false),
-                    ModifyDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    ModifyDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -127,7 +128,6 @@ namespace A2.Migrations
                     TransactionType = table.Column<string>(type: "nvarchar(1)", maxLength: 1, nullable: false),
                     AccountNumber = table.Column<int>(type: "int", nullable: false),
                     DestinationAccount = table.Column<int>(type: "int", nullable: true),
-                    DestAccountAccountNumber = table.Column<int>(type: "int", nullable: true),
                     Amount = table.Column<decimal>(type: "money", nullable: true),
                     Comment = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     ModifyDate = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -143,8 +143,8 @@ namespace A2.Migrations
                         principalColumn: "AccountNumber",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Transaction_Account_DestAccountAccountNumber",
-                        column: x => x.DestAccountAccountNumber,
+                        name: "FK_Transaction_Account_DestinationAccount",
+                        column: x => x.DestinationAccount,
                         principalTable: "Account",
                         principalColumn: "AccountNumber",
                         onDelete: ReferentialAction.Restrict);
@@ -176,9 +176,9 @@ namespace A2.Migrations
                 column: "AccountNumber");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transaction_DestAccountAccountNumber",
+                name: "IX_Transaction_DestinationAccount",
                 table: "Transaction",
-                column: "DestAccountAccountNumber");
+                column: "DestinationAccount");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
