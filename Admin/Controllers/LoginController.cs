@@ -36,36 +36,28 @@ namespace Admin.Controllers
             {
                 return NotFound();
             }
-            TimedSwapLoginAction(login[0]);
-
-            return RedirectToAction(nameof(Index));
-        }
-        private async void TimedSwapLoginAction(LoginDto login)
-        {
-            SwapLoginActionType(ref login);
-            var response = JsonByAPI.ReturnResponseEditObject(Client, getLoginAPI, login);
+            login[0] = SwapLoginActionType(login[0]);
+            var response = JsonByAPI.ReturnResponseEditObject(Client, getLoginAPI, login[0]);
             if (!response.IsSuccessStatusCode)
             {
                 ModelState.AddModelError("LoginEditFailed", "Unexpected error occured whilst accessing login.");
-                return;
+                return View(login);
             }
-            if (login.Status == ActiveType.Locked)
-            {
-                await Task.Delay(TimeSpan.FromMinutes(1));
-                SwapLoginActionType(ref login);
-                JsonByAPI.ReturnResponseEditObject(Client, getLoginAPI, login);
-            }
+
+            return RedirectToAction(nameof(Index));
         }
-        private void SwapLoginActionType(ref LoginDto login)
+        private LoginDto SwapLoginActionType(LoginDto login)
         {
             if (login.Status == ActiveType.Unlocked)
             {
                 login.Status = ActiveType.Locked;
+                login.ModifyDate = DateTime.UtcNow.AddMinutes(1);
             }
             else
             {
                 login.Status = ActiveType.Unlocked;
             }
+            return login;
         }
     }
 }

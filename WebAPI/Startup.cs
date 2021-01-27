@@ -34,11 +34,6 @@ namespace WebAPI
             {
                 options.UseSqlServer(Configuration.GetConnectionString(nameof(s3811836_a2Context)));
             });
-            services.AddHttpsRedirection(options =>
-            {
-                options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
-                options.HttpsPort = 5000;
-            });
             services.AddScoped<BillPaysManager>();
             services.AddScoped<LoginManager>();
             services.AddScoped<TransactionsManager>();

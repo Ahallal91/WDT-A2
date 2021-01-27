@@ -1,5 +1,7 @@
+using Admin.BackgroundServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,6 +31,20 @@ namespace Admin
                 client.BaseAddress = new Uri(Configuration.GetConnectionString("API"));
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             });
+            services.AddHostedService<LoginStatusBackgroundService>();
+            // Store session into Web-Server memory.
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                // Times out user after 5 minutes of inactivity.
+                options.IdleTimeout = TimeSpan.FromMinutes(5);
+                // Make the session cookie essential.
+                options.Cookie.IsEssential = true;
+            });
+
+            // add anti-forgery to forms
+            services.AddControllersWithViews(options =>
+            options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
             services.AddControllersWithViews();
         }
 

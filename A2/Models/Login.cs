@@ -37,7 +37,7 @@ namespace A2.Models
         [StringLength(64)]
         [ValidPasswordLength]
         public string PasswordHash { get; set; }
-
+        // the last time the account was modified - including status.
         [Required, StringLength(20)]
         public DateTime ModifyDate { get; set; }
         public ActiveType Status { get; set; }
