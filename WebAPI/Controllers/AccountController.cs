@@ -10,31 +10,31 @@ namespace WebAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class TransactionsController : ControllerBase
+    public class AccountController : ControllerBase
     {
-        private readonly TransactionsManager _repo;
+        private readonly AccountManager _repo;
 
-        public TransactionsController(TransactionsManager repo)
+        public AccountController(AccountManager repo)
         {
             _repo = repo;
         }
 
         [HttpGet]
-        public IEnumerable<Transaction> Get()
+        public IEnumerable<Account> Get()
         {
             return _repo.GetAll();
         }
 
         [HttpGet("{id}")]
-        public IEnumerable<Transaction> Get(int id)
+        public IEnumerable<Account> Get(int id)
         {
             return _repo.GetAllByID(id);
         }
 
         [HttpPut]
-        public void Put([FromBody] Transaction transaction)
+        public void Put([FromBody] Account account)
         {
-            _repo.Update(transaction.TransactionId, transaction);
+            _repo.Update(account.AccountNumber, account);
         }
     }
 }

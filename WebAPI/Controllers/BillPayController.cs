@@ -10,31 +10,31 @@ namespace WebAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class TransactionsController : ControllerBase
+    public class BillPayController : ControllerBase
     {
-        private readonly TransactionsManager _repo;
+        private readonly BillPaysManager _repo;
 
-        public TransactionsController(TransactionsManager repo)
+        public BillPayController(BillPaysManager repo)
         {
             _repo = repo;
         }
 
         [HttpGet]
-        public IEnumerable<Transaction> Get()
+        public IEnumerable<BillPay> Get()
         {
             return _repo.GetAll();
         }
 
         [HttpGet("{id}")]
-        public IEnumerable<Transaction> Get(int id)
+        public IEnumerable<BillPay> Get(int id)
         {
             return _repo.GetAllByID(id);
         }
 
         [HttpPut]
-        public void Put([FromBody] Transaction transaction)
+        public void Put([FromBody] BillPay billpay)
         {
-            _repo.Update(transaction.TransactionId, transaction);
+            _repo.Update(billpay.BillPayId, billpay);
         }
     }
 }

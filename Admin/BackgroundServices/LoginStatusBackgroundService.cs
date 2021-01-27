@@ -55,7 +55,6 @@ namespace Admin.BackgroundServices
 
             for (int i = 0; i < login.Count; i++)
             {
-                Console.WriteLine(login[i].LoginID);
                 if (login[i].ModifyDate.CompareTo(DateTime.UtcNow) < 0 && login[i].Status == ActiveType.Locked)
                 {
                     login[i].Status = ActiveType.Unlocked;

@@ -25,6 +25,6 @@ namespace Admin.Models
         public decimal? Amount { get; set; }
         [StringLength(255)]
         public string Comment { get; set; }
-        public DateTime? ModifyDate { get; set; }
+        public DateTime ModifyDate { get; set; }
     }
 }

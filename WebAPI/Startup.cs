@@ -37,6 +37,7 @@ namespace WebAPI
             services.AddScoped<BillPaysManager>();
             services.AddScoped<LoginManager>();
             services.AddScoped<TransactionsManager>();
+            services.AddScoped<AccountManager>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

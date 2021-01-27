@@ -1,64 +1,90 @@
-﻿@model IEnumerable<TransactionDto>
+﻿@model TransactionViewModel
 @{
     ViewData["Title"] = "Transactions";
 }
 
 <h1>Transactions Index</h1>
+
+<form asp-action="Index" asp-controller="Transaction" method="post" class="form-group">
+    <p>
+        Customer ID: <input asp-for=@Model.CustomerID value=@Model.CustomerID.ToString() data-val-required="The CustomerID is required." />
+        StartDate: <input asp-for=@Model.StartDate type="datetime-local" asp-format="{0:dd/MM/yyyy HH:mm}" data-val-required="The StartDate field is required." />
+        EndDate: <input asp-for=@Model.EndDate type="datetime-local" asp-format="{0:dd/MM/yyyy HH:mm}" data-val-required="The EndDate field is required." />
+        <input type="submit" value="Filter" />
+    </p>
+    @Html.ValidationMessage("CustomerIDError", new { @class = "text-danger" })
+</form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.TransactionID)
+                @Html.DisplayNameFor(model => model.Accounts[0].CustomerID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TransactionType)
+                @Html.DisplayNameFor(model => model.Accounts[0].Transactions[0].AccountNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AccountNumber)
+                @Html.DisplayNameFor(model => model.Accounts[0].Transactions[0].TransactionID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DestinationAccount)
+                @Html.DisplayNameFor(model => model.Accounts[0].Transactions[0].TransactionType)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Amount)
+                @Html.DisplayNameFor(model => model.Accounts[0].Transactions[0].DestinationAccount)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Comment)
+                @Html.DisplayNameFor(model => model.Accounts[0].Transactions[0].Amount)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ModifyDate)
+                @Html.DisplayNameFor(model => model.Accounts[0].Transactions[0].Comment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Accounts[0].Transactions[0].ModifyDate)
             </th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var acc in Model.Accounts)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TransactionID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TransactionType)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AccountNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DestinationAccount)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Amount)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Comment)
-                </td>
-                <td>
-                    @{
-                        DateTime.TryParse(item.ModifyDate.ToString(), out DateTime date);
-                    }
-                    @date
-                </td>
-            </tr>
+            @foreach (var item in Model.Transactions)
+            {
+                @if (acc.AccountNumber == item.AccountNumber)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => acc.CustomerID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AccountNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TransactionID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TransactionType)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DestinationAccount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Amount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Comment)
+                        </td>
+                        <td>
+                            @{
+                                DateTime.TryParse(item.ModifyDate.ToString(), out DateTime date);
+                            }
+                            @date.ToLocalTime();
+                        </td>
+                    </tr>
+                }
+            }
         }
     </tbody>
 </table>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
