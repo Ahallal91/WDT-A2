@@ -35,7 +35,12 @@ namespace A2.Controllers
         [Route("ATM")]
         public async Task<IActionResult> ATM()
         {
-            return View(nameof(ATM), await ReturnAtmViewModel(0));
+            var customer = await _context.Customer.Include(x => x.Accounts).
+                 FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
+            return View(nameof(ATM), new ATMViewModel()
+            {
+                Customer = customer
+            });
         }
         /// <summary>
         /// ATMTransaction method takes data from the ATM view and validates it. It then performs a deposit/withdraw/transfer depending
@@ -43,19 +48,25 @@ namespace A2.Controllers
         /// redirect users to customer home page. Unsuccessful transactions reload the ATM page with the error displayed.
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> ATMTransaction(int accountNumber, string toAccountNumber, decimal amount, string transactionType, string comment)
+        public async Task<IActionResult> ATMTransaction(ATMViewModel atmViewModel)
         {
             AccountLogic processTransaction = new AccountLogic();
-            var account = await _context.Account.Include(x => x.Transactions).FirstOrDefaultAsync(x => x.AccountNumber == accountNumber);
+            var customer = await _context.Customer.Include(x => x.Accounts).ThenInclude(x => x.Transactions).
+                FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
 
-            Account toAccount = null;
-            if (transactionType == nameof(processTransaction.Transfer))
+            Account account = Util.Utilities.ValidateAccount(customer, atmViewModel.AccountNumber);
+            if (account == null)
             {
-                if (!int.TryParse(toAccountNumber, out var toAccNumber))
+                ModelState.AddModelError("NoAccountError", "You do not own an account of that account number.");
+            }
+            if (atmViewModel.transfer == atmViewModel.TransactionType && ModelState.IsValid)
+            {
+                Account toAccount = null;
+                if (!int.TryParse(atmViewModel.ToAccountNumber, out var toAccNumber))
                 {
                     ModelState.AddModelError("AccountError", "You must enter an account number to transfer to.");
                 }
-                if (accountNumber == toAccNumber)
+                if (atmViewModel.AccountNumber == toAccNumber)
                 {
                     ModelState.AddModelError("AccountError", "You cannot transfer to your own account.");
                 }
@@ -67,42 +78,29 @@ namespace A2.Controllers
                         ModelState.AddModelError("AccountError", "The account you are transferring to does not exist");
                     }
                 }
-                if (!ModelState.IsValid)
+                if (ModelState.IsValid)
                 {
-                    return View(nameof(ATM), ReturnAtmViewModel(amount).Result);
+                    account = processTransaction.Transfer(atmViewModel.Amount, account, toAccount, atmViewModel.Comment);
                 }
-                account = processTransaction.Transfer(amount, account, toAccount, comment);
             }
-            else if (transactionType == nameof(processTransaction.Deposit))
+            else if (atmViewModel.deposit == atmViewModel.TransactionType && ModelState.IsValid)
             {
-                account = processTransaction.Deposit(amount, account);
+                account = processTransaction.Deposit(atmViewModel.Amount, account);
             }
-            else if (transactionType == nameof(processTransaction.Withdraw))
+            else if (atmViewModel.withdraw == atmViewModel.TransactionType && ModelState.IsValid)
             {
-                account = processTransaction.Withdraw(amount, account);
+                account = processTransaction.Withdraw(atmViewModel.Amount, account);
             }
-            if (account == null)
+            if (account == null && ModelState.IsValid)
             {
                 ModelState.AddModelError("Amount", "You have insufficient Balance for that transaction.");
-                return View(nameof(ATM), ReturnAtmViewModel(amount).Result);
+            }
+            if (!ModelState.IsValid)
+            {
+                return View(nameof(ATM), atmViewModel);
             }
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Home));
-        }
-        /// <summary>
-        /// Calls customer model from database and returns an ATMviewModel of the customer with updated viewbag amount.
-        /// </summary>
-        /// <param name="amount">The default amount you want to show in viewbag.</param>
-        private async Task<ATMViewModel> ReturnAtmViewModel(decimal amount)
-        {
-            var customer = await _context.Customer.Include(x => x.Accounts).
-                FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
-            var atmViewModel = new ATMViewModel()
-            {
-                Customer = customer,
-            };
-            ViewBag.Amount = amount;
-            return atmViewModel;
         }
         /// <summary>
         /// Transaction returns a TransactionViewModel with the current session customer, their
@@ -144,14 +142,6 @@ namespace A2.Controllers
         [Route("Bills")]
         public async Task<IActionResult> PayBill()
         {
-            return View(await ReturnPayBillViewModel(0));
-        }
-        /// <summary>
-        /// Gets customer and payee information from database and returns a PayBillViewModel with this data.
-        /// </summary>
-        /// <param name="amount">The amount you want the viewbag to show by default.</param>
-        private async Task<PayBillViewModel> ReturnPayBillViewModel(decimal amount)
-        {
             var customer = await _context.Customer.Include(x => x.Accounts).
                 FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
             var payee = await _context.Payee.ToListAsync();
@@ -160,17 +150,24 @@ namespace A2.Controllers
                 Customer = customer,
                 Payee = payee,
             };
-            ViewBag.Amount = amount;
-            return payBillViewModel;
+            return View(payBillViewModel);
         }
+
         /// <summary>
         /// AddPayBillTransaction collects data from the PayBill view and validates it, if valid it adds the specified billpay to
         /// the accounts billpay list and redirects the user to the BillPays view. If unsucessful it reloads the PayBill view
         /// displaying the error.
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> AddPayBillTransaction([Bind("AccountNumber, PayeeID, Amount, ScheduledDate, Period")] PayBillViewModel payBill)
+        public async Task<IActionResult> AddPayBillTransaction(PayBillViewModel payBill)
         {
+            var customer = await _context.Customer.Include(x => x.Accounts).ThenInclude(x => x.BillPay).
+                FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
+            Account account = Util.Utilities.ValidateAccount(customer, payBill.AccountNumber);
+            if (account == null)
+            {
+                ModelState.AddModelError("NoAccountError", "You do not own an account of that account number.");
+            }
             if (payBill.ScheduledDate.CompareTo(DateTime.Now) < 0)
             {
                 ModelState.AddModelError("DateError", "You cannot schedule a date in the past.");
@@ -182,10 +179,8 @@ namespace A2.Controllers
             }
             if (!ModelState.IsValid)
             {
-                return View(nameof(PayBill), ReturnPayBillViewModel(payBill.Amount).Result);
+                return View(nameof(PayBill), payBill);
             }
-            var account = await _context.Account.Include(x => x.BillPay).
-                FirstOrDefaultAsync(x => x.AccountNumber == payBill.AccountNumber);
             account.BillPay.Add(new BillPay()
             {
                 AccountNumber = payBill.AccountNumber,
@@ -299,7 +294,6 @@ namespace A2.Controllers
                 Status = bill.Status,
                 Payees = payee
             };
-            ViewBag.Amount = bill.Amount;
 
             return updateBillPayViewModel;
         }

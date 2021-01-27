@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +33,11 @@ namespace WebAPI
             services.AddDbContext<s3811836_a2Context>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString(nameof(s3811836_a2Context)));
+            });
+            services.AddHttpsRedirection(options =>
+            {
+                options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+                options.HttpsPort = 5000;
             });
             services.AddScoped<BillPaysManager>();
             services.AddScoped<LoginManager>();

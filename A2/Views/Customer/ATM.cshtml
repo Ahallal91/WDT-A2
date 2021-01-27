@@ -13,22 +13,23 @@
         <h1 class="display-4 text-left pb-3">ATM</h1>
         <form asp-action="ATMTransaction">
             <div class="form-group">
-                <label for="transactionType" class="form-label">Please select your Transaction Type:</label>
-                <select onchange="onSelectEventHandler()" class="form-select form-control" name="transactionType" id="transactionType" aria-label="Default select example">
-                    <option selected value="Transfer">Transfer</option>
-                    <option value="Deposit">Deposit</option>
-                    <option value="Withdraw">Withdraw</option>
+                <label asp-for="TransactionType" class="form-label">Please select your Transaction Type:</label>
+                <select onchange="onSelectEventHandler()" id="transactionType" class="form-select form-control" asp-for="TransactionType" aria-label="Default select example">
+                    <option selected value="T">Transfer</option>
+                    <option value="D">Deposit</option>
+                    <option value="W">Withdraw</option>
                 </select>
             </div>
             <div class="form-group">
-                <label for="accountNumber" class="form-label">Please select your Account:</label>
-                <select class="form-select form-control" name="accountNumber" id="accountNumber" aria-label="Default select example">
+                <label asp-for="AccountNumber" class="form-label">Please select your Account:</label>
+                <select class="form-select form-control" asp-for="AccountNumber" aria-label="Default select example">
 
                     @foreach (var acc in Model.Customer.Accounts)
                     {
                         <option value=@acc.AccountNumber>@Html.DisplayFor(x => acc.AccountNumber) [@Html.DisplayFor(x => acc.AccountType)]</option>
                     }
                 </select>
+                @Html.ValidationMessage("NoAccountError", new { @class = "text-danger" })
             </div>
             <div class="form-group" id="TransferATM">
                 <label asp-for="ToAccountNumber" class="control-label"></label>
@@ -38,14 +39,14 @@
             </div>
             <div class="form-group">
                 <label asp-for="Amount" class="control-label"></label>
-                <input asp-for="Amount" id="Amount" name="Amount" class="form-control" value="@ViewBag.Amount?.ToString("0.00")"
+                <input asp-for="Amount" class="form-control" value=@Math.Round(Model.Amount,2)
                        data-val="true" data-val-number="The field Amount must be a number."
                        data-val-required="The Amount field is required." />
                 <span asp-validation-for="Amount" class="text-danger"></span>
             </div>
             <div class="form-group text-left" id="CommentATM">
-                <label class="control-label">Comment</label>
-                <input value="" name="comment" id="comment" class="form-control" />
+                <label asp-for="Comment" class="control-label"></label>
+                <input value="" asp-for="Comment" class="form-control" />
 
             </div>
             <div class="form-group text-right">
@@ -58,7 +59,7 @@
 @*This hides the transaction ID field if the user has selected Withdraw or Deposit*@
 <script>
     function onSelectEventHandler() {
-        if (document.getElementById('transactionType').value == "Transfer") {
+        if (document.getElementById('transactionType').value == "T") {
             document.getElementById('TransferATM').style.display = 'block';
             document.getElementById('CommentATM').style.display = 'block';
         } else {

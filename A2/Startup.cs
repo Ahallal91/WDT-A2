@@ -3,6 +3,7 @@ using A2.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,8 +47,9 @@ namespace A2
                 // Make the session cookie essential.
                 options.Cookie.IsEssential = true;
             });
-
-            services.AddControllersWithViews();
+            // add anti-forgery to forms
+            services.AddControllersWithViews(options =>
+            options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

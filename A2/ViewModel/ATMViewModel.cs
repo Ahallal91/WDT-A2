@@ -12,13 +12,20 @@ namespace A2.ViewModel
 {
     public class ATMViewModel
     {
+        public readonly string transfer = "T";
+        public readonly string withdraw = "W";
+        public readonly string deposit = "D";
         public Customer Customer { get; set; }
+        [RegularExpression(@"^\d{4}?$", ErrorMessage = "Account numbers must be 4 digits")]
+        public int AccountNumber { get; set; }
         [RegularExpression(@"^\d{4}?$", ErrorMessage = "Account numbers must be 4 digits")]
         public string ToAccountNumber { get; set; }
         [Required]
         [DataType(DataType.Currency)]
         [RegularExpression(@"^[0-9]*(\.[0-9][0-9]?)?$", ErrorMessage = "Currency must be greater than zero and to two decimal places.")]
         public decimal Amount { get; set; }
+        [RegularExpression(@"^[DWT]$", ErrorMessage = "Enter a valid transaction type")]
+        public string TransactionType { get; set; }
         public string Comment { get; set; }
     }
 }

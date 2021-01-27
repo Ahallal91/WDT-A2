@@ -17,6 +17,7 @@
                         <option value=@acc.AccountNumber>@Html.DisplayFor(x => acc.AccountNumber) [@Html.DisplayFor(x => acc.AccountType)]</option>
                     }
                 </select>
+                @Html.ValidationMessage("NoAccountError", new { @class = "text-danger" })
             </div>
             <div class="form-group">
                 <label asp-for="PayeeID" class="form-label">Please select your Payee:</label>
@@ -30,7 +31,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Amount" class="control-label"></label>
-                <input asp-for="Amount" class="form-control" value="@ViewBag.Amount?.ToString("0.00")"
+                <input asp-for="Amount" class="form-control" value=@Math.Round(Model.Amount,2)
                        data-val="true" data-val-number="The field Amount must be a number."
                        data-val-required="The Amount field is required." />
                 <span asp-validation-for="Amount" class="text-danger"></span>

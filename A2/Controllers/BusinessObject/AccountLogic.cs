@@ -19,7 +19,7 @@ namespace A2.Controllers.BusinessObject
         /// <param name="account">account to deposit to</param>
         public Account Deposit(decimal value, Account account)
         {
-            string depositTransaction = "D";
+            const string depositTransaction = "D";
             if (value > 0)
             {
                 account.Balance += value;
@@ -45,7 +45,7 @@ namespace A2.Controllers.BusinessObject
         public Account Withdraw(decimal value, Account account)
         {
             AccountConstraints constraints = new AccountConstraints(account.AccountType);
-            string withdrawTransaction = "W";
+            const string withdrawTransaction = "W";
             if (value > 0)
             {
                 if (ComputeTransation(value, account, constraints, constraints.withdrawCharge))
@@ -81,7 +81,7 @@ namespace A2.Controllers.BusinessObject
         public Account Transfer(decimal value, Account account, Account toAccountNumber, string comment)
         {
             AccountConstraints constraints = new AccountConstraints(account.AccountType);
-            string transferTransaction = "T";
+            const string transferTransaction = "T";
             if (value > 0)
             {
                 if (ComputeTransation(value, account, constraints, constraints.transferCharge))
@@ -173,7 +173,7 @@ namespace A2.Controllers.BusinessObject
         /// <param name="account">The account where the service charge is added</param>
         private void ServiceCharge(decimal charge, string comment, ref Account account)
         {
-            string serviceChargeTransaction = "S";
+            const string serviceChargeTransaction = "S";
             account.Transactions.Add(new Transaction
             {
                 TransactionType = serviceChargeTransaction,
@@ -197,7 +197,7 @@ namespace A2.Controllers.BusinessObject
         public Account ComputeBillPay(BillPay billPay, Account account)
         {
             AccountConstraints constraints = new AccountConstraints(account.AccountType);
-            string billPayTransaction = "B";
+            const string billPayTransaction = "B";
 
             if ((account.Balance - billPay.Amount) >= constraints.MinBalance)
             {
@@ -224,11 +224,14 @@ namespace A2.Controllers.BusinessObject
         /// <param name="account">account to transfer from</param>
         private void CalculateNextBillPay(BillPay billPay, ref Account account)
         {
-            if (billPay.Period == "S")
+            const string oneTime = "S";
+            const string monthly = "M";
+            const string quarterly = "Q";
+            if (billPay.Period == oneTime)
             {
                 account.BillPay.Find(x => x.BillPayID == billPay.BillPayID).Status = StatusType.Complete;
             }
-            else if (billPay.Period == "M")
+            else if (billPay.Period == monthly)
             {
                 account.BillPay.Find(x => x.BillPayID == billPay.BillPayID).Status = StatusType.Complete;
                 account.BillPay.Add(new BillPay()
@@ -242,7 +245,7 @@ namespace A2.Controllers.BusinessObject
                     Status = StatusType.Awaiting
                 });
             }
-            else if (billPay.Period == "Q")
+            else if (billPay.Period == quarterly)
             {
                 account.BillPay.Find(x => x.BillPayID == billPay.BillPayID).Status = StatusType.Complete;
                 account.BillPay.Add(new BillPay()

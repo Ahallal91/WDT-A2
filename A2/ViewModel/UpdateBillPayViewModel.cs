@@ -12,6 +12,7 @@ namespace A2.ViewModel
     {
         public List<Payee> Payees { get; set; }
         public int BillPayID { get; set; }
+        [RegularExpression(@"^\d{4}$", ErrorMessage = "Account numbers must be 4 digits")]
         public int AccountNumber { get; set; }
         public int PayeeID { get; set; }
         [Column(TypeName = "money")]

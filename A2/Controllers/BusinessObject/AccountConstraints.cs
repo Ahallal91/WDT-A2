@@ -33,13 +33,15 @@ namespace A2.Controllers.BusinessObject
         /// <param name="accountType">The type of account you want to get parameters for.</param>
         private void SetAccount(string accountType)
         {
+            const string savings = "S";
+            const string checking = "C";
             switch (accountType)
             {
-                case "S":
+                case savings:
                     OpeningBalance = 100;
                     MinBalance = 0;
                     break;
-                case "C":
+                case checking:
                     OpeningBalance = 500;
                     MinBalance = 200;
                     break;
