@@ -34,7 +34,7 @@
                         <td>@Html.DisplayFor(x => bill.ScheduleDate)</td>
                         <td>@Html.DisplayFor(x => bill.Period)</td>
                         <td>@Html.DisplayFor(x => bill.Status)</td>
-                        @if (bill.Status != StatusType.Complete)
+                        @if (bill.Status != StatusType.Complete && bill.Status != StatusType.Blocked)
                         {
                             <td><a class=" btn btn-primary btn-block" asp-area="" asp-controller="Customer" asp-route-id="@bill.BillPayID" asp-action="UpdateBill">Modify</a></td>
                         }

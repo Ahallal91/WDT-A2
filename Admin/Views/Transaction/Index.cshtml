@@ -1,4 +1,6 @@
-﻿@model TransactionViewModel
+﻿@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Core.Common
+@model TransactionViewModel
 @{
     ViewData["Title"] = "Transactions";
 }
@@ -8,9 +10,15 @@
 <form asp-action="Index" asp-controller="Transaction" method="post" class="form-group">
     <p>
         Customer ID: <input asp-for=@Model.CustomerID value=@Model.CustomerID.ToString() data-val-required="The CustomerID is required." />
+    </p>
+    <p>
         StartDate: <input asp-for=@Model.StartDate type="datetime-local" asp-format="{0:dd/MM/yyyy HH:mm}" data-val-required="The StartDate field is required." />
+    </p>
+    <p>
         EndDate: <input asp-for=@Model.EndDate type="datetime-local" asp-format="{0:dd/MM/yyyy HH:mm}" data-val-required="The EndDate field is required." />
-        <input type="submit" value="Filter" />
+    </p>
+    <p>
+        <input class="btn btn-primary" type="submit" value="Filter" />
     </p>
     @Html.ValidationMessage("CustomerIDError", new { @class = "text-danger" })
 </form>
@@ -84,6 +92,12 @@
         }
     </tbody>
 </table>
+@Html.PagedListPager(Model.Transactions, page => Url.Action("Index", new { page }),
+    new PagedListRenderOptions
+        {
+        LiElementClasses = new[] { "page-item" },
+        PageClasses = new[] { "page-link" }
+    })
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }

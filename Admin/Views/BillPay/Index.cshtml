@@ -1,4 +1,7 @@
-﻿@model IEnumerable<BillPayDto>
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Core.Common
+@model IPagedList<BillPayDto>
 @{
     ViewData["Title"] = "Billpays";
 }
@@ -8,28 +11,28 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.BillPayID)
+                @Html.DisplayNameFor(model => model[0].BillPayID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AccountNumber)
+                @Html.DisplayNameFor(model => model[0].AccountNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PayeeID)
+                @Html.DisplayNameFor(model => model[0].PayeeID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Amount)
+                @Html.DisplayNameFor(model => model[0].Amount)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ScheduleDate)
+                @Html.DisplayNameFor(model => model[0].ScheduleDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Period)
+                @Html.DisplayNameFor(model => model[0].Period)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ModifyDate)
+                @Html.DisplayNameFor(model => model[0].ModifyDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Status)
+                @Html.DisplayNameFor(model => model[0].Status)
             </th>
         </tr>
     </thead>
@@ -81,3 +84,12 @@
         }
     </tbody>
 </table>
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+    new PagedListRenderOptions
+        {
+        LiElementClasses = new[] { "page-item" },
+        PageClasses = new[] { "page-link" }
+    })
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

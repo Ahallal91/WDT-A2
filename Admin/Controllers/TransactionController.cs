@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using X.PagedList;
 
 namespace Admin.Controllers
 {
@@ -22,18 +23,22 @@ namespace Admin.Controllers
         private HttpClient Client => _clientFactory.CreateClient("api");
         public TransactionController(IHttpClientFactory clientFactory) => _clientFactory = clientFactory;
 
-        public async Task<IActionResult> Index(TransactionViewModel transactionViewModel)
+        public async Task<IActionResult> Index(TransactionViewModel transactionViewModel, int? page = 1)
         {
+            const int pageSize = 6;
             var accounts = await JsonByAPI.ReturnDeserialisedObject<AccountDto>(Client, getAccountAPI);
             var transactions = await JsonByAPI.ReturnDeserialisedObject<TransactionDto>(Client, getTransactionAPI);
             if (transactionViewModel.CustomerID == 0)
             {
                 ModelState.AddModelError("EmptyID", "");
             }
-            var login = await JsonByAPI.ReturnDeserialisedObject<LoginDto>(Client, getLoginAPI);
-            if (login.Find(x => x.CustomerID == transactionViewModel.CustomerID) == null)
+            if (ModelState.IsValid)
             {
-                ModelState.AddModelError("CustomerIDError", "That CustomerID does not exist");
+                var login = await JsonByAPI.ReturnDeserialisedObject<LoginDto>(Client, getLoginAPI);
+                if (login.Find(x => x.CustomerID == transactionViewModel.CustomerID) == null)
+                {
+                    ModelState.AddModelError("CustomerIDError", "That CustomerID does not exist");
+                }
             }
             // returns if customer ID is invalid
             if (!ModelState.IsValid)
@@ -41,7 +46,7 @@ namespace Admin.Controllers
                 return View(new TransactionViewModel()
                 {
                     Accounts = accounts,
-                    Transactions = transactions
+                    Transactions = transactions.ToPagedList((int)page, pageSize)
                 });
             }
             // filters out accounts and transactions via date.
@@ -59,7 +64,7 @@ namespace Admin.Controllers
             {
                 CustomerID = transactionViewModel.CustomerID,
                 Accounts = accountsChosen,
-                Transactions = transactionsChosen,
+                Transactions = transactionsChosen.ToPagedList((int)page, pageSize),
                 StartDate = transactionViewModel.StartDate,
                 EndDate = transactionViewModel.EndDate
             });
