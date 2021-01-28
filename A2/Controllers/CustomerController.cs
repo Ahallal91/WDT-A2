@@ -47,6 +47,7 @@ namespace A2.Controllers
         /// on what the user selected in the form. All transactions are added to the account transactions list. Successful transactions
         /// redirect users to customer home page. Unsuccessful transactions reload the ATM page with the error displayed.
         /// </summary>
+        /// <param name="atmViewModel"> atmViewModel with data from the view.</param>
         [HttpPost]
         public async Task<IActionResult> ATMTransaction(ATMViewModel atmViewModel)
         {
@@ -115,7 +116,7 @@ namespace A2.Controllers
         {
             // handles display of transactions per page
             const int pageSize = 4;
-            var customer = await _context.Customer.Include(x => x.Accounts).
+            var customer = await _context.Customer.Include(x => x.Accounts).ThenInclude(x => x.Transactions).
                 FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
             // sets default account to first account if no account id
             if (customer.Accounts.Find(x => x.AccountNumber == id) == null)
@@ -124,7 +125,7 @@ namespace A2.Controllers
             }
 
             // gets transactions of selected account in pagedList form
-            var pagedTransactionList = await _context.Transaction.Where(X => X.AccountNumber == id).ToPagedListAsync(page, pageSize);
+            var pagedTransactionList = customer.Accounts.Find(x => x.AccountNumber == id).Transactions.ToPagedList((int)page, pageSize);
 
             var transactionsViewModel = new TransactionsViewModel()
             {
