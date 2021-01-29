@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using A2.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace A2.Data
@@ -10,7 +11,7 @@ namespace A2.Data
     /*
      Reference McbaExampleWithLogin McbaContext file week6
      */
-    public class A2Context : DbContext
+    public class A2Context : IdentityDbContext
     {
         public A2Context(DbContextOptions<A2Context> options) : base(options)
         { }
