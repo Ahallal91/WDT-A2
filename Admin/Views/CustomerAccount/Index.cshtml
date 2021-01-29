@@ -44,11 +44,11 @@
                 <td>
                     @if (item.Status == ActiveType.Unlocked)
                     {
-                        <a asp-action="Edit" asp-controller="Login" asp-route-id="@item.LoginID">Block</a>
+                        <a asp-action="Edit" asp-controller="CustomerAccount" asp-route-id="@item.LoginID">Block</a>
                     }
                     else
                     {
-                        <a asp-action="Edit" asp-controller="Login" asp-route-id="@item.LoginID">Unblock</a>
+                        <a asp-action="Edit" asp-controller="CustomerAccount" asp-route-id="@item.LoginID">Unblock</a>
                     }
                 </td>
             </tr>

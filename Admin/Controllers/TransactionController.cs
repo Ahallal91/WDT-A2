@@ -13,28 +13,26 @@ using X.PagedList;
 
 namespace Admin.Controllers
 {
+    [Route("Admin")]
     public class TransactionController : Controller
     {
-        private const string getTransactionAPI = "/api/Transactions";
-        private const string getLoginAPI = "/api/Login";
-        private const string getAccountAPI = "/api/Account";
-
         private readonly IHttpClientFactory _clientFactory;
         private HttpClient Client => _clientFactory.CreateClient("api");
         public TransactionController(IHttpClientFactory clientFactory) => _clientFactory = clientFactory;
 
+        [Route("Transactions")]
         public async Task<IActionResult> Index(TransactionViewModel transactionViewModel, int? page = 1)
         {
             const int pageSize = 6;
-            var accounts = await JsonByAPI.ReturnDeserialisedObject<AccountDto>(Client, getAccountAPI);
-            var transactions = await JsonByAPI.ReturnDeserialisedObject<TransactionDto>(Client, getTransactionAPI);
+            var accounts = await JsonByAPI.ReturnDeserialisedObject<AccountDto>(Client, APIUrl.GetAccountAPI);
+            var transactions = await JsonByAPI.ReturnDeserialisedObject<TransactionDto>(Client, APIUrl.GetTransactionAPI);
             if (transactionViewModel.CustomerID == 0)
             {
                 ModelState.AddModelError("EmptyID", "");
             }
             if (ModelState.IsValid)
             {
-                var login = await JsonByAPI.ReturnDeserialisedObject<LoginDto>(Client, getLoginAPI);
+                var login = await JsonByAPI.ReturnDeserialisedObject<LoginDto>(Client, APIUrl.GetLoginAPI);
                 if (login.Find(x => x.CustomerID == transactionViewModel.CustomerID) == null)
                 {
                     ModelState.AddModelError("CustomerIDError", "That CustomerID does not exist");

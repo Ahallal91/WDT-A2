@@ -8,56 +8,45 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Text;
 using Admin.Util;
+using SimpleHashing;
+using Microsoft.AspNetCore.Http;
+using Admin.Filters;
 
 namespace Admin.Controllers
 {
+    /*
+    * Reference McbaExampleWithLogin Login.cs week 6
+    */
+    [Route("")]
     public class LoginController : Controller
     {
-        private const string getLoginAPI = "/api/Login";
+        private const string adminID = "admin";
+        private const string adminPW = "admin";
+        public IActionResult Login() => View();
 
-        private readonly IHttpClientFactory _clientFactory;
-        private HttpClient Client => _clientFactory.CreateClient("api");
-        public LoginController(IHttpClientFactory clientFactory) => _clientFactory = clientFactory;
-
-        public async Task<IActionResult> Index()
+        [HttpPost]
+        public IActionResult GetLogin(Administrator admin)
         {
-            var login = await JsonByAPI.ReturnDeserialisedObject<LoginDto>(Client, getLoginAPI);
+            if (admin.AdminID != adminID || admin.AdminPW != adminPW)
+            {
+                ModelState.AddModelError("LoginFailed", "Invalid LoginID or password, please try again.");
+                return View("Login", admin);
+            }
 
-            return View(login);
+            // Set admin session
+            HttpContext.Session.SetString(nameof(admin.AdminID), admin.AdminID);
+            Console.WriteLine("got here2");
+            Console.WriteLine(HttpContext.Session.GetString(nameof(admin.AdminID)));
+            return RedirectToAction("Index", "Home");
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        [Route("LogoutNow")]
+        public IActionResult Logout()
         {
-            if (id == null)
-                return NotFound();
+            // Logout customer.
+            HttpContext.Session.Clear();
 
-            var login = await JsonByAPI.ReturnDeserialisedObject<LoginDto>(Client, $"{getLoginAPI}/{id}");
-            if (!login.Any())
-            {
-                return NotFound();
-            }
-            login[0] = SwapLoginActionType(login[0]);
-            var response = JsonByAPI.ReturnResponseEditObject(Client, getLoginAPI, login[0]);
-            if (!response.IsSuccessStatusCode)
-            {
-                ModelState.AddModelError("LoginEditFailed", "Unexpected error occured whilst accessing login.");
-                return View(login);
-            }
-
-            return RedirectToAction(nameof(Index));
-        }
-        private LoginDto SwapLoginActionType(LoginDto login)
-        {
-            if (login.Status == ActiveType.Unlocked)
-            {
-                login.Status = ActiveType.Locked;
-                login.ModifyDate = DateTime.UtcNow.AddMinutes(1);
-            }
-            else
-            {
-                login.Status = ActiveType.Unlocked;
-            }
-            return login;
+            return RedirectToAction("Login", "Login");
         }
     }
 }
