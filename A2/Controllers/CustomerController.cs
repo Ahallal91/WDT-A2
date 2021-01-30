@@ -58,9 +58,10 @@ namespace A2.Controllers
             });
         }
         /// <summary>
-        /// ATMTransaction method takes data from the ATM view and validates it. It then performs a deposit/withdraw/transfer depending
-        /// on what the user selected in the form. All transactions are added to the account transactions list. Successful transactions
-        /// redirect users to customer home page. Unsuccessful transactions reload the ATM page with the error displayed.
+        /// ATMTransaction method takes data from the ATM view and validates it. It then performs a deposit/withdraw/transfer using
+        /// the AccountLogic class depending on what the user selected in the form. All transactions are added to the account
+        /// transactions list. Successful transactions redirect users to customer home page. Unsuccessful
+        /// transactions reload the ATM page with the error displayed.
         /// </summary>
         /// <param name="atmViewModel"> atmViewModel with data from the view.</param>
         [HttpPost]
@@ -117,6 +118,7 @@ namespace A2.Controllers
             }
             if (!ModelState.IsValid)
             {
+                atmViewModel.Customer = user.Customer;
                 return View(nameof(ATM), atmViewModel);
             }
             await _context.SaveChangesAsync();
