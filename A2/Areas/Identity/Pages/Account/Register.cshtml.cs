@@ -124,6 +124,7 @@ namespace A2.Areas.Identity.Pages.Account
                     _context.SaveChanges();
                     user.CustomerID = customerID;
                     await _userManager.UpdateAsync(user);
+                    await _userManager.AddToRoleAsync(user, "Customer");
                     _logger.LogInformation("User created a new account with password.");
 
                     {

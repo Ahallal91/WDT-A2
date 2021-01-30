@@ -4,14 +4,16 @@ using A2.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace A2.Migrations
 {
     [DbContext(typeof(IdentityA2Context))]
-    partial class IdentityA2ContextModelSnapshot : ModelSnapshot
+    [Migration("20210130060516_Added-roles")]
+    partial class Addedroles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -73,7 +73,7 @@ namespace A2
                 options.Password.RequiredLength = 1;
                 options.Password.RequiredUniqueChars = 0;
 
-                options.User.AllowedUserNameCharacters = "0123456789";
+                options.User.AllowedUserNameCharacters = "0123456789admin";
                 options.User.RequireUniqueEmail = false;
             });
 
@@ -116,7 +116,6 @@ namespace A2
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-
         }
     }
 }

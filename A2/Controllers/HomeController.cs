@@ -1,5 +1,7 @@
-﻿using A2.Models;
+﻿using A2.Data;
+using A2.Models;
 using A2.ViewModel;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;

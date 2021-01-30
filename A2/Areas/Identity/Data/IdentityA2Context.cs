@@ -45,6 +45,8 @@ namespace A2.Data
             builder.Entity<BillPay>().HasOne(x => x.Payee).WithMany(x => x.BillPay).HasForeignKey(x => x.PayeeID);
             builder.Entity<Transaction>().
                 HasOne(x => x.Account).WithMany(x => x.Transactions).HasForeignKey(x => x.AccountNumber);
+            builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = "Admin", NormalizedName = "Admin".ToUpper() });
+            builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = "Customer", NormalizedName = "Customer".ToUpper() });
         }
     }
 }

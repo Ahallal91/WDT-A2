@@ -15,6 +15,7 @@ namespace A2.Areas.Identity
     {
         public void Configure(IWebHostBuilder builder)
         {
+
             builder.ConfigureServices((context, services) =>
             {
                 services.AddDbContext<IdentityA2Context>(options =>
