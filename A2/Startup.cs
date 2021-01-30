@@ -46,15 +46,17 @@ namespace A2
                 // Make the session cookie essential.
                 options.Cookie.IsEssential = true;
             });
+            // add IdentityRole configuration
             services.AddDefaultIdentity<A2User>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<IdentityA2Context>();
             services.AddAuthorization(options =>
                 options.AddPolicy("Admin",
                     policy => policy.RequireClaim("Admin")));
+            // configure password and user options for identity
+            // have been made insecure for purpose of this assignment.
             services.Configure<IdentityOptions>(options =>
             {
-                // Default Password settings.
                 options.Password.RequireDigit = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
