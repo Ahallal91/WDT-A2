@@ -87,10 +87,11 @@ namespace A2.Areas.Identity.Pages.Account
             if (user == null)
             {
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-
-                return Page();
             }
-
+            if (user.Status == ActiveType.Locked)
+            {
+                ModelState.AddModelError(string.Empty, "Your account is locked, please contact an Administrator.");
+            }
             if (ModelState.IsValid)
             {
                 // This doesn't count login failures towards account lockout
@@ -129,15 +130,6 @@ namespace A2.Areas.Identity.Pages.Account
                         }
                     }
                     return Page();
-                }
-                if (result.RequiresTwoFactor)
-                {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-                }
-                if (result.IsLockedOut)
-                {
-                    _logger.LogWarning("User account locked out.");
-                    return RedirectToPage("./Lockout");
                 }
                 else
                 {
