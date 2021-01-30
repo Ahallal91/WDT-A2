@@ -49,7 +49,9 @@ namespace A2
             services.AddDefaultIdentity<A2User>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<IdentityA2Context>();
-
+            services.AddAuthorization(options =>
+                options.AddPolicy("Admin",
+                    policy => policy.RequireClaim("Admin")));
             services.Configure<IdentityOptions>(options =>
             {
                 // Default Password settings.

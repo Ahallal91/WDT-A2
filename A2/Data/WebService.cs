@@ -144,7 +144,7 @@ namespace A2.Data
                 ModifyDate = DateTime.UtcNow,
                 Status = ActiveType.Unlocked
             };
-            var result = userManager.CreateAsync(adminUser, "Admin").Result;
+            var result = userManager.CreateAsync(adminUser, adminUser.PasswordHash).Result;
 
             if (result.Succeeded)
             {

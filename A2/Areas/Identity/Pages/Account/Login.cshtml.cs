@@ -50,7 +50,7 @@ namespace A2.Areas.Identity.Pages.Account
         {
             [Required]
             [StringLength(8)]
-            [RegularExpression(@"^\d{8}?$", ErrorMessage = "Login ID must be 8 digits.")]
+            [RegularExpression(@"^\d{8}?|(admin)$", ErrorMessage = "Login ID must be 8 digits.")]
             [Display(Name = "Login ID")]
             public string UserID { get; set; }
 
@@ -84,9 +84,10 @@ namespace A2.Areas.Identity.Pages.Account
             returnUrl ??= Url.Content("~/");
 
             var user = await _userManager.FindByIdAsync(Input.UserID);
+            Console.WriteLine(Input.UserID);
             if (user == null)
             {
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                ModelState.AddModelError(string.Empty, "Invalid login attempt1.");
             }
             if (user.Status == ActiveType.Locked)
             {
@@ -98,6 +99,7 @@ namespace A2.Areas.Identity.Pages.Account
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
 
                 var result = await _signInManager.PasswordSignInAsync(Input.UserID, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                Console.WriteLine(Input.UserID + " " + Input.Password + " " + result);
                 if (!result.Succeeded)
                 {
                     // handle legacy hashed password from A1.
@@ -133,7 +135,7 @@ namespace A2.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt");
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt2");
                     return Page();
                 }
             }
