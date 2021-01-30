@@ -33,7 +33,7 @@ namespace Admin.Controllers
             if (ModelState.IsValid)
             {
                 var login = await JsonByAPI.ReturnDeserialisedObject<LoginDto>(Client, APIUrl.GetLoginAPI);
-                if (login.Find(x => x.CustomerID == transactionViewModel.CustomerID) == null)
+                if (login.Find(x => x.CustomerId == transactionViewModel.CustomerID) == null)
                 {
                     ModelState.AddModelError("CustomerIDError", "That CustomerID does not exist");
                 }

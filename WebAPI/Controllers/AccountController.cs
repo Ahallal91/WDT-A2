@@ -22,7 +22,7 @@ namespace WebAPI.Controllers
         [HttpGet]
         public IEnumerable<Account> Get()
         {
-            return _repo.GetAll();
+            return (IEnumerable<Account>)_repo.GetAll();
         }
 
         [HttpGet("{id}")]

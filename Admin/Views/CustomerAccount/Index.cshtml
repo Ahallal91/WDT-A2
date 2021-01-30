@@ -9,10 +9,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.LoginID)
+                @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CustomerID)
+                @Html.DisplayNameFor(model => model.CustomerId)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ModifyDate)
@@ -27,10 +27,10 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.LoginID)
+                    @Html.DisplayFor(modelItem => item.Id)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CustomerID)
+                    @Html.DisplayFor(modelItem => item.CustomerId)
                 </td>
                 <td>
                     @{
@@ -44,11 +44,11 @@
                 <td>
                     @if (item.Status == ActiveType.Unlocked)
                     {
-                        <a asp-action="Edit" asp-controller="CustomerAccount" asp-route-id="@item.LoginID">Block</a>
+                        <a asp-action="Edit" asp-controller="CustomerAccount" asp-route-id="@item.Id">Block</a>
                     }
                     else
                     {
-                        <a asp-action="Edit" asp-controller="CustomerAccount" asp-route-id="@item.LoginID">Unblock</a>
+                        <a asp-action="Edit" asp-controller="CustomerAccount" asp-route-id="@item.CustomerId">Unblock</a>
                     }
                 </td>
             </tr>

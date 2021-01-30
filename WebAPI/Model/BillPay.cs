@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace WebAPI.Model
+namespace WebAPI
 {
     public partial class BillPay
     {

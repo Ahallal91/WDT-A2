@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Admin.Models
+#nullable disable
+
+namespace WebAPI
 {
-    public enum ActiveType
+    public partial class AspNetUser
     {
-        Unlocked = 1,
-        Locked = 2
-    }
-    public class LoginDto
-    {
+        public AspNetUser()
+        {
+            AspNetUserClaims = new HashSet<AspNetUserClaim>();
+            AspNetUserLogins = new HashSet<AspNetUserLogin>();
+            AspNetUserRoles = new HashSet<AspNetUserRole>();
+            AspNetUserTokens = new HashSet<AspNetUserToken>();
+        }
+
         public string Id { get; set; }
         public int? CustomerId { get; set; }
         public DateTime ModifyDate { get; set; }
-        public ActiveType Status { get; set; }
+        public int Status { get; set; }
         public string UserName { get; set; }
         public string NormalizedUserName { get; set; }
         public string Email { get; set; }
@@ -31,6 +33,11 @@ namespace Admin.Models
         public DateTimeOffset? LockoutEnd { get; set; }
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
+
+        public virtual Customer Customer { get; set; }
+        public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; }
+        public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; }
+        public virtual ICollection<AspNetUserRole> AspNetUserRoles { get; set; }
+        public virtual ICollection<AspNetUserToken> AspNetUserTokens { get; set; }
     }
 }
-

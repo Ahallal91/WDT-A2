@@ -49,20 +49,7 @@ namespace A2
             services.AddDefaultIdentity<A2User>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<IdentityA2Context>();
-            services.AddMvc(options =>
-            {
-                var policy = new AuthorizationPolicyBuilder()
-                                .RequireAuthenticatedUser()
-                                .Build();
-                options.Filters.Add(new AuthorizeFilter(policy));
-            });
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("RequireAdministratorRole",
-                     policy => policy.RequireRole("Administrator"));
-                options.AddPolicy("RequireCustomerRole",
-                    policy => policy.RequireRole("Customer"));
-            });
+
             services.Configure<IdentityOptions>(options =>
             {
                 // Default Password settings.
@@ -107,8 +94,8 @@ namespace A2
             app.UseStaticFiles();
             app.UseRouting();
             app.UseSession();
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();

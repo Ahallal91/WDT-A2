@@ -21,7 +21,7 @@ using System.Security.Claims;
 namespace A2.Controllers
 {
     [Route("Customer")]
-    //[Authorize(Policy = "RequireCustomerRole")]
+    [Authorize(Roles = "Customer")]
     public class CustomerController : Controller
     {
         private readonly IdentityA2Context _context;

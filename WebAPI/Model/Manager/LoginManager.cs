@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebAPI.Data;
 using WebAPI.Model.Repository;
 
 namespace WebAPI.Model.Manager
 {
-    public class LoginManager : IDataRepository<Login, int>
+    public class LoginManager : IDataRepository<AspNetUser, int>
     {
         private readonly s3811836_a2Context _context;
 
@@ -16,17 +15,17 @@ namespace WebAPI.Model.Manager
             _context = context;
         }
 
-        public IEnumerable<Login> GetAll()
+        public IEnumerable<AspNetUser> GetAll()
         {
-            return _context.Logins.ToList();
+            return _context.AspNetUsers.ToList();
         }
 
-        public IEnumerable<Login> GetAllByID(int id)
+        public IEnumerable<AspNetUser> GetAllByID(int id)
         {
-            return _context.Logins.ToList().Where(x => x.LoginId == id.ToString());
+            return _context.AspNetUsers.ToList().Where(x => x.Id == id.ToString());
         }
 
-        public int Update(int id, Login login)
+        public int Update(int id, AspNetUser login)
         {
             _context.Update(login);
             _context.SaveChanges();

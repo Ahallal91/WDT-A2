@@ -113,10 +113,20 @@ namespace A2.Areas.Identity.Pages.Account
                 }
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
-                    if (!string.IsNullOrEmpty(returnUrl))
+                    var getRoles = _userManager.GetRolesAsync(user).Result;
+                    foreach (var role in getRoles)
                     {
-                        return Redirect(returnUrl);
+                        if (role == "Admin")
+                        {
+                            return Redirect("https://localhost:44350/");
+                        }
+                        else if (role == "Customer")
+                        {
+                            if (!string.IsNullOrEmpty(returnUrl))
+                            {
+                                return Redirect(returnUrl);
+                            }
+                        }
                     }
                     return Page();
                 }

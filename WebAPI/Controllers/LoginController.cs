@@ -20,21 +20,21 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Login> Get()
+        public IEnumerable<AspNetUser> Get()
         {
             return _repo.GetAll();
         }
 
         [HttpGet("{id}")]
-        public IEnumerable<Login> Get(int id)
+        public IEnumerable<AspNetUser> Get(int id)
         {
             return _repo.GetAllByID(id);
         }
 
         [HttpPut]
-        public void Put([FromBody] Login login)
+        public void Put([FromBody] AspNetUser login)
         {
-            _repo.Update(int.Parse(login.LoginId), login);
+            _repo.Update(int.Parse(login.Id), login);
         }
     }
 }

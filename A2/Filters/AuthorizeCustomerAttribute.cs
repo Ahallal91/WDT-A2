@@ -12,15 +12,15 @@ namespace A2.Filters
     /*
      * Reference McbaExampleWithLogin AuthorizeCustomerAttribute.cs week 6
      */
-    public class AuthorizeCustomerAttribute : Attribute, IAuthorizationFilter
-    {
-        public void OnAuthorization(AuthorizationFilterContext context)
+    /*    public class AuthorizeCustomerAttribute : Attribute, IAuthorizationFilter
         {
-            var customerID = context.HttpContext.Session.GetInt32(nameof(Customer.CustomerID));
-            if (!customerID.HasValue)
+            public void OnAuthorization(AuthorizationFilterContext context)
             {
-                context.Result = new RedirectToActionResult("Index", "Home", null);
+                var customerID = context.HttpContext.Session.GetInt32(nameof(Customer.CustomerID));
+                if (!customerID.HasValue)
+                {
+                    context.Result = new RedirectToActionResult("Index", "Home", null);
+                }
             }
-        }
-    }
+        }*/
 }

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace WebAPI.Model
+namespace WebAPI
 {
     public partial class Customer
     {
         public Customer()
         {
             Accounts = new HashSet<Account>();
-            Logins = new HashSet<Login>();
+            AspNetUsers = new HashSet<AspNetUser>();
         }
 
         public int CustomerId { get; set; }
@@ -23,6 +23,6 @@ namespace WebAPI.Model
         public string Phone { get; set; }
 
         public virtual ICollection<Account> Accounts { get; set; }
-        public virtual ICollection<Login> Logins { get; set; }
+        public virtual ICollection<AspNetUser> AspNetUsers { get; set; }
     }
 }
