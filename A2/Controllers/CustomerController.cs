@@ -19,9 +19,9 @@ namespace A2.Controllers
     [AuthorizeCustomer]
     public class CustomerController : Controller
     {
-        private readonly A2Context _context;
+        private readonly IdentityA2Context _context;
         private int CustomerID => HttpContext.Session.GetInt32(nameof(Customer.CustomerID)).Value;
-        public CustomerController(A2Context context) => _context = context;
+        public CustomerController(IdentityA2Context context) => _context = context;
         [Route("Home")]
         public async Task<IActionResult> Home()
         {

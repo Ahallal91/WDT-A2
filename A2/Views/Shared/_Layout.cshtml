@@ -75,15 +75,13 @@
 
                         @if (isLoggedIn)
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-light btn btn-secondary" asp-controller="Login" asp-action="Logout"><i class="bi bi-box-arrow-in-left"></i> Logout</a>
-                            </li>
+                            //<li class="nav-item">
+                            //<a class="nav-link text-light btn btn-secondary" asp-controller="Login" asp-action="Logout"><i class="bi bi-box-arrow-in-left"></i> Logout</a>
+                            // </li>
                         }
                         else
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-light  btn btn-primary" asp-area="Login" asp-controller="Login" asp-action="Login"><i class="bi bi-box-arrow-in-right"></i> Login</a>
-                            </li>
+                            <partial name="_LoginPartial" />
                         }
                     </ul>
 

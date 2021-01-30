@@ -14,14 +14,14 @@ namespace A2.Models
     /// this model unless the customer is updating their contact information. Therefore it makes sense to 
     /// have this class as a record rather than a normal class.
     /// </summary>
-    public record Customer
+    public class Customer
     {
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [RegularExpression(@"^\d{4}$", ErrorMessage = "CustomerID must be 4 digits long.")]
         public int CustomerID { get; set; }
         [Required]
-        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Ente a valid name")]
+        [RegularExpression(@"^[A-Za-z ]+$", ErrorMessage = "Enter a valid name")]
         [StringLength(50)]
         public string CustomerName { get; set; }
         [RegularExpression("[0-9]\\d{9}", ErrorMessage = "Enter a valid 9 digit TFN.")]

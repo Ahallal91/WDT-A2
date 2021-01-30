@@ -6,6 +6,8 @@ using Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using A2.Models;
 using A2.Data.JsonModels;
+using A2.Areas.Identity.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace A2.Data
 {
@@ -18,33 +20,31 @@ namespace A2.Data
         /// <param name="serviceProvider">IServiceProvider interface</param>
         public static void Initialize(IServiceProvider serviceProvider)
         {
-            var context = serviceProvider.GetRequiredService<A2Context>();
+            var context = serviceProvider.GetRequiredService<IdentityA2Context>();
+            const string customerConnection = "https://coreteaching01.csit.rmit.edu.au/~e87149/wdt/services/customers/";
+            const string loginConnection = "https://coreteaching01.csit.rmit.edu.au/~e87149/wdt/services/logins/";
             // if any customers populated in database exit out
             if (context.Customer.Any())
             {
                 return;
             }
 
-            AddCustomerToDatabase(context, GetJson.GetJsonByURLAsync<Customers>(
-                "https://coreteaching01.csit.rmit.edu.au/~e87149/wdt/services/customers/"
-                , "dd/MM/yyyy hh:mm:ss tt").Result);
+            AddCustomerToDatabase(context, GetJson.GetJsonByURLAsync<Customers>(customerConnection, "dd/MM/yyyy hh:mm:ss tt").Result);
 
             // if any logins populated in database exit out
-            if (context.Login.Any())
+            if (context.Users.Any())
             {
                 return;
             }
 
-            AddLoginToDatabase(context, GetJson.GetJsonByURLAsync<JsonModels.Login>(
-                "https://coreteaching01.csit.rmit.edu.au/~e87149/wdt/services/logins/"
-                , "").Result);
+            AddLoginToDatabase(context, GetJson.GetJsonByURLAsync<JsonModels.Login>(loginConnection, "").Result);
         }
         /// <summary>
         /// Populates database with Customers from a JsonModels customer list.
         /// </summary>
         /// <param name="context">Context File</param>
         /// <param name="customers">Json Model customer file</param>
-        private static void AddCustomerToDatabase(A2Context context, List<Customers> customers)
+        private static void AddCustomerToDatabase(IdentityA2Context context, List<Customers> customers)
         {
             string tempPhone = "+61 9999 9999";
             string comment = "Opening transaction";
@@ -95,7 +95,7 @@ namespace A2.Data
         /// </summary>
         /// <param name="context">Context File</param>
         /// <param name="logins">Json Model login file</param>
-        private static void AddLoginToDatabase(A2Context context, List<JsonModels.Login> logins)
+        private static void AddLoginToDatabase(IdentityA2Context context, List<JsonModels.Login> logins)
         {
             // if there was a problem with loading the JSON file.
             if (logins == null)
@@ -105,13 +105,13 @@ namespace A2.Data
 
             foreach (var log in logins)
             {
-                context.Login.Add(new Models.Login
+                context.Users.Add(new A2User()
                 {
-                    LoginID = log.LoginID,
+                    Id = log.LoginID,
                     CustomerID = log.CustomerID,
                     PasswordHash = log.PasswordHash,
                     ModifyDate = DateTime.UtcNow,
-                    Status = ActiveType.Unlocked,
+                    Status = ActiveType.Unlocked
                 });
             }
             context.SaveChanges();

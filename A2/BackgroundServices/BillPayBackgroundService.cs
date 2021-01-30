@@ -50,7 +50,7 @@ namespace A2.BackgroundServices
         private async Task BillPayCheck(CancellationToken stoppingToken)
         {
             using var scope = _services.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<A2Context>();
+            var context = scope.ServiceProvider.GetRequiredService<IdentityA2Context>();
             var account = await context.Account.ToListAsync(stoppingToken);
 
             for (int i = 0; i < account.Count; i++)

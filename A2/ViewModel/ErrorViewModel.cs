@@ -7,7 +7,7 @@ namespace A2.ViewModel
         public string RequestId { get; set; }
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
         public int ErrorCode { get; set; }
-        public Dictionary<int, string> errorDict = new Dictionary<int, string>
+        public readonly Dictionary<int, string> errorDict = new Dictionary<int, string>
         {
             {400, "Bad request" },
             {401, "Unauthorized" },

@@ -1,8 +1,10 @@
+using A2.Areas.Identity.Data;
 using A2.BackgroundServices;
 using A2.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -30,13 +32,6 @@ namespace A2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<A2Context>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString(nameof(A2Context)));
-
-                // Enable lazy loading.
-                options.UseLazyLoadingProxies();
-            });
             services.AddHostedService<BillPayBackgroundService>();
             // Store session into Web-Server memory.
             services.AddDistributedMemoryCache();
@@ -47,9 +42,34 @@ namespace A2
                 // Make the session cookie essential.
                 options.Cookie.IsEssential = true;
             });
+
+            services.AddIdentity<A2User, IdentityRole>()
+                .AddEntityFrameworkStores<IdentityA2Context>();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Default Password settings.
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 1;
+                options.Password.RequiredUniqueChars = 0;
+
+                options.User.AllowedUserNameCharacters = "0123456789";
+                options.User.RequireUniqueEmail = false;
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/Identity/Account/Login";
+                options.LogoutPath = $"/Identity/Account/Logout";
+                options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+            });
             // add anti-forgery to forms
             services.AddControllersWithViews(options =>
             options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,13 +91,15 @@ namespace A2
             app.UseRouting();
             app.UseSession();
             app.UseAuthorization();
-
+            app.UseAuthentication();
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapRazorPages();
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
         }
     }
 }

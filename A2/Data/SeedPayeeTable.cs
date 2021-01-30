@@ -11,7 +11,7 @@ namespace A2.Data
     {
         public static void Initialize(IServiceProvider serviceProvider)
         {
-            var context = serviceProvider.GetRequiredService<A2Context>();
+            var context = serviceProvider.GetRequiredService<IdentityA2Context>();
 
             if (context.Payee.Any())
                 return;
