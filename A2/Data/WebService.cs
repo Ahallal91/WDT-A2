@@ -25,19 +25,16 @@ namespace A2.Data
             const string customerConnection = "https://coreteaching01.csit.rmit.edu.au/~e87149/wdt/services/customers/";
             const string loginConnection = "https://coreteaching01.csit.rmit.edu.au/~e87149/wdt/services/logins/";
 
-            // if any customers populated in database exit out
+            // if any customers populated in database dont add again.
             if (!context.Customer.Any())
             {
                 AddCustomerToDatabase(context, GetJson.GetJsonByURLAsync<Customers>(customerConnection, "dd/MM/yyyy hh:mm:ss tt").Result);
             }
-            // if any logins populated in database exit out
-            if (context.Users.Any())
+            // if any logins populated in database dont add again.
+            if (!context.Users.Any())
             {
-                return;
+                AddLoginToDatabase(context, userManager, GetJson.GetJsonByURLAsync<JsonModels.Login>(loginConnection, "").Result);
             }
-
-            AddLoginToDatabase(context, userManager, GetJson.GetJsonByURLAsync<JsonModels.Login>(loginConnection, "").Result);
-
         }
 
         /// <summary>
@@ -92,7 +89,8 @@ namespace A2.Data
             context.SaveChanges();
         }
         /// <summary>
-        /// Populates database with logins from a JsonModels login list.
+        /// Populates database with logins from a JsonModels login list. Also uses AddUserRoles and AddAdminRoles to add roles to users
+        /// and add admin account in database.
         /// </summary>
         /// <param name="context">Context File</param>
         /// <param name="logins">Json Model login file</param>
@@ -123,18 +121,25 @@ namespace A2.Data
             }
             context.SaveChanges();
             AddUserRoles(userManager, userList);
-            AddUserRoles(userManager);
+            AddAdminRoles(userManager);
         }
-
+        /// <summary>
+        /// Uses userManager to add roles to users.
+        /// </summary>
+        /// <param name="userManager">usermanager for A2Users/param>
+        /// <param name="users">List of users that have been added to the AspNetUsers table</param>
         private static void AddUserRoles(UserManager<A2User> userManager, List<A2User> users)
         {
             for (int i = 0; i < users.Count; i++)
             {
                 var result = userManager.AddToRoleAsync(users[i], "Customer").Result;
-
             }
         }
-        private static void AddUserRoles(UserManager<A2User> userManager)
+        /// <summary>
+        /// Uses userManager to create admin account login and also add admin role to that account.
+        /// </summary>
+        /// <param name="userManager">usermanager for A2Users/param>
+        private static void AddAdminRoles(UserManager<A2User> userManager)
         {
             var adminUser = new A2User()
             {

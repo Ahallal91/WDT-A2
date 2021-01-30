@@ -10,11 +10,6 @@ using Microsoft.AspNetCore.Identity;
 namespace A2.Areas.Identity.Data
 {
     // Add profile data for application users by adding properties to the A2User class
-    public enum UserRole
-    {
-        Admin = 1,
-        Customer = 2
-    }
     public enum ActiveType
     {
         Unlocked = 1,
