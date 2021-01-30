@@ -6,6 +6,7 @@ using A2.Areas.Identity.Data;
 using A2.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace A2.Data
@@ -22,6 +23,8 @@ namespace A2.Data
         public DbSet<Payee> Payee { get; set; }
         public DbSet<Transaction> Transaction { get; set; }
         public object Customers { get; internal set; }
+        public RedirectToActionResult Result { get; internal set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

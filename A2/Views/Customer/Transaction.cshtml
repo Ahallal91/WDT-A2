@@ -36,22 +36,12 @@
         @foreach (var transaction in Model.Transactions)
         {
             <tr>
-                @{
-                    DateTime hasDate = DateTime.MinValue;
-                    if (DateTime.TryParse(transaction.ModifyDate.ToString(), out hasDate))
-                    {
-                        hasDate = hasDate.ToLocalTime();
-                    }
-                }
                 <td>@Html.DisplayFor(x => transaction.TransactionID)</td>
                 <td>@Html.DisplayFor(x => transaction.TransactionType)</td>
                 <td>@Html.DisplayFor(x => transaction.DestinationAccount)</td>
                 <td>@Html.DisplayFor(x => transaction.Amount)</td>
                 <td>@Html.DisplayFor(x => transaction.Comment)</td>
-                @if (hasDate != DateTime.MinValue)
-                {
-                    <td>@hasDate</td>
-                }
+                <td>@Html.DisplayFor(x => transaction.ModifyDate)</td>
             </tr>
         }
     </table>

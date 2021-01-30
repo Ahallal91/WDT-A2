@@ -22,11 +22,11 @@
                 <img src="~/images/headerwhite.svg" height="50" width="50" asp-append-version="true">
                 @if (isLoggedIn)
                 {
-                    <a class="navbar-brand" asp-area="" asp-controller="Customer" asp-action="Home">MCBA Online Banking</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Customer" asp-action="Home">MCBA Online Banking</a>
                 }
                 else
                 {
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MCBA Online Banking</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MCBA Online Banking</a>
                 }
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -34,55 +34,7 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav ml-auto">
-                        @if (isLoggedIn)
-                        {
-                            <li class="nav-item">
-                                <span class="nav-link text-light">
-                                    Welcome, @Context.Session.GetString(nameof(Customer.CustomerName))
-                                </span>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-light center" asp-area="" asp-controller="Customer" asp-action="Home"><i class="bi bi-house-door-fill"></i> Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-light center" asp-area="" asp-controller="Home" asp-action="Privacy"><i class="bi bi-shield-lock-fill"></i> Privacy</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-light center" asp-area="" asp-controller="Customer" asp-action="ATM"><i class="bi bi-credit-card-fill"></i> ATM</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-light center" asp-area="" asp-controller="Customer" asp-action="Transaction"><i class="bi bi-credit-card-fill"></i> Transactions</a>
-                            </li>
-                            <li class="nav-item dropdown  pr-3">
-                                <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Payments
-                                </a>
-                                <div class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
-                                    <a class="nav-link text-light center" asp-area="" asp-controller="Customer" asp-action="PayBill"><i class="bi bi-cash"></i> Pay Bills</a>
-                                    <a class="nav-link text-light center" asp-area="" asp-controller="Customer" asp-action="BillPays"><i class="bi bi-calendar-check-fill"></i> Scheduled Bills</a>
-                                </div>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-light center" asp-area="" asp-controller="Home" asp-action="Index"><i class="bi bi-house-door-fill"></i> Home</a>
-                            </li>
-                            <li class="nav-item  pr-3">
-                                <a class="nav-link text-light center" asp-area="" asp-controller="Home" asp-action="Privacy"><i class="bi bi-shield-lock-fill"></i> Privacy</a>
-                            </li>
-                        }
-
-                        @if (isLoggedIn)
-                        {
-                            //<li class="nav-item">
-                            //<a class="nav-link text-light btn btn-secondary" asp-controller="Login" asp-action="Logout"><i class="bi bi-box-arrow-in-left"></i> Logout</a>
-                            // </li>
-                        }
-                        else
-                        {
-                            <partial name="_LoginPartial" />
-                        }
+                        <partial name="_LoginPartial" />
                     </ul>
 
                 </div>

@@ -108,6 +108,7 @@ namespace A2.Data
                 context.Users.Add(new A2User()
                 {
                     Id = log.LoginID,
+                    UserName = log.LoginID,
                     CustomerID = log.CustomerID,
                     PasswordHash = log.PasswordHash,
                     ModifyDate = DateTime.UtcNow,

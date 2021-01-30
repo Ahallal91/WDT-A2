@@ -11,7 +11,7 @@
 <div class="row mt-3 ">
     <div class="col-md-6 offset-md-3 px-5 py-5 my-5 rounded text-light bg-dark">
         <h1 class="display-4 text-left pb-3">ATM</h1>
-        <form asp-action="ATMTransaction">
+        <form asp-action="ATMTransaction" asp-controller="Customer">
             <div class="form-group">
                 <label asp-for="TransactionType" class="form-label">Please select your Transaction Type:</label>
                 <select onchange="onSelectEventHandler()" id="transactionType" class="form-select form-control" asp-for="TransactionType" aria-label="Default select example">

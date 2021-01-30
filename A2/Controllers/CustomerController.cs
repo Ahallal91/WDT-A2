@@ -13,20 +13,31 @@ using A2.Controllers.BusinessObject;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using A2.ViewModel;
 using X.PagedList;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using A2.Areas.Identity.Data;
+using System.Security.Claims;
 
 namespace A2.Controllers
 {
-    [AuthorizeCustomer]
+    [Route("Customer")]
     public class CustomerController : Controller
     {
         private readonly IdentityA2Context _context;
-        private int CustomerID => HttpContext.Session.GetInt32(nameof(Customer.CustomerID)).Value;
-        public CustomerController(IdentityA2Context context) => _context = context;
+        private readonly UserManager<A2User> _userManager;
+        private string LoginID => _userManager.GetUserId(User);
+        public CustomerController(IdentityA2Context context,
+            UserManager<A2User> userManager)
+        {
+            _context = context;
+            _userManager = userManager;
+        }
         [Route("Home")]
         public async Task<IActionResult> Home()
         {
+            var log = await _context.Users.FirstOrDefaultAsync(x => x.Id == LoginID);
             var customer = await _context.Customer.Include(x => x.Accounts).
-                FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
+                FirstOrDefaultAsync(x => x.CustomerID == log.CustomerID);
             return View(customer);
         }
         /// <summary>
@@ -35,8 +46,9 @@ namespace A2.Controllers
         [Route("ATM")]
         public async Task<IActionResult> ATM()
         {
+            var log = await _context.Users.FirstOrDefaultAsync(x => x.Id == LoginID);
             var customer = await _context.Customer.Include(x => x.Accounts).
-                 FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
+                 FirstOrDefaultAsync(x => x.CustomerID == log.CustomerID);
             return View(nameof(ATM), new ATMViewModel()
             {
                 Customer = customer
@@ -49,11 +61,13 @@ namespace A2.Controllers
         /// </summary>
         /// <param name="atmViewModel"> atmViewModel with data from the view.</param>
         [HttpPost]
+        [Route("ATMTransaction")]
         public async Task<IActionResult> ATMTransaction(ATMViewModel atmViewModel)
         {
+            var log = await _context.Users.FirstOrDefaultAsync(x => x.Id == LoginID);
             AccountLogic processTransaction = new AccountLogic();
             var customer = await _context.Customer.Include(x => x.Accounts).ThenInclude(x => x.Transactions).
-                FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
+                FirstOrDefaultAsync(x => x.CustomerID == log.CustomerID);
 
             Account account = Util.Utilities.ValidateAccount(customer, atmViewModel.AccountNumber);
             if (account == null)
@@ -114,10 +128,11 @@ namespace A2.Controllers
         [Route("Transaction")]
         public async Task<IActionResult> Transaction(int id, int? page = 1)
         {
+            var log = await _context.Users.FirstOrDefaultAsync(x => x.Id == LoginID);
             // handles display of transactions per page
             const int pageSize = 4;
             var customer = await _context.Customer.Include(x => x.Accounts).ThenInclude(x => x.Transactions).
-                FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
+                FirstOrDefaultAsync(x => x.CustomerID == log.CustomerID);
             // sets default account to first account if no account id
             if (customer.Accounts.Find(x => x.AccountNumber == id) == null)
             {
@@ -143,8 +158,9 @@ namespace A2.Controllers
         [Route("Bills")]
         public async Task<IActionResult> PayBill()
         {
+            var log = await _context.Users.FirstOrDefaultAsync(x => x.Id == LoginID);
             var customer = await _context.Customer.Include(x => x.Accounts).
-                FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
+                FirstOrDefaultAsync(x => x.CustomerID == log.CustomerID);
             var payee = await _context.Payee.ToListAsync();
             var payBillViewModel = new PayBillViewModel()
             {
@@ -160,10 +176,12 @@ namespace A2.Controllers
         /// displaying the error.
         /// </summary>
         [HttpPost]
+        [Route("AddPayBillTransaction")]
         public async Task<IActionResult> AddPayBillTransaction(PayBillViewModel payBill)
         {
+            var log = await _context.Users.FirstOrDefaultAsync(x => x.Id == LoginID);
             var customer = await _context.Customer.Include(x => x.Accounts).ThenInclude(x => x.BillPay).
-                FirstOrDefaultAsync(x => x.CustomerID == CustomerID);
+                FirstOrDefaultAsync(x => x.CustomerID == log.CustomerID);
             Account account = Util.Utilities.ValidateAccount(customer, payBill.AccountNumber);
             if (account == null)
             {
@@ -204,7 +222,8 @@ namespace A2.Controllers
         [Route("Bills/View")]
         public async Task<IActionResult> BillPays()
         {
-            var customer = await _context.Customer.FindAsync(CustomerID);
+            var log = await _context.Users.FirstOrDefaultAsync(x => x.Id == LoginID);
+            var customer = await _context.Customer.FindAsync(log.CustomerID);
             List<BillPaysViewModel> billPaysViewModels = new List<BillPaysViewModel>();
             foreach (var acc in customer.Accounts)
             {

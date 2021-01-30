@@ -1,11 +1,13 @@
 using A2.Areas.Identity.Data;
 using A2.BackgroundServices;
 using A2.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,10 +44,15 @@ namespace A2
                 // Make the session cookie essential.
                 options.Cookie.IsEssential = true;
             });
-
             services.AddIdentity<A2User, IdentityRole>()
                 .AddEntityFrameworkStores<IdentityA2Context>();
-
+            services.AddMvc(options =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                                .RequireAuthenticatedUser()
+                                .Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            });
             services.Configure<IdentityOptions>(options =>
             {
                 // Default Password settings.
