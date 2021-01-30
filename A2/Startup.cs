@@ -1,6 +1,7 @@
 using A2.Areas.Identity.Data;
 using A2.BackgroundServices;
 using A2.Data;
+using A2.Util;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,7 +46,8 @@ namespace A2
                 // Make the session cookie essential.
                 options.Cookie.IsEssential = true;
             });
-            services.AddIdentity<A2User, IdentityRole>()
+            services.AddDefaultIdentity<A2User>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<IdentityA2Context>();
             services.AddMvc(options =>
             {
@@ -52,6 +55,13 @@ namespace A2
                                 .RequireAuthenticatedUser()
                                 .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
+            });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdministratorRole",
+                     policy => policy.RequireRole("Administrator"));
+                options.AddPolicy("RequireCustomerRole",
+                    policy => policy.RequireRole("Customer"));
             });
             services.Configure<IdentityOptions>(options =>
             {

@@ -23,11 +23,12 @@ namespace A2.Areas.Identity.Data
     public class A2User : IdentityUser
     {
         [ForeignKey("Customer")]
-        public int CustomerID { get; set; }
+        public int? CustomerID { get; set; }
         public virtual Customer Customer { get; set; }
         // the last time the account was modified - including status.
         [Required]
         public DateTime ModifyDate { get; set; }
+        [Required]
         public ActiveType Status { get; set; }
     }
 }

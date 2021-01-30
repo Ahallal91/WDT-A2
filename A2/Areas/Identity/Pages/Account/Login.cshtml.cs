@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using A2.Data;
+using SimpleHashing;
 
 namespace A2.Areas.Identity.Pages.Account
 {
@@ -94,7 +95,22 @@ namespace A2.Areas.Identity.Pages.Account
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+
                 var result = await _signInManager.PasswordSignInAsync(Input.UserID, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                if (!result.Succeeded)
+                {
+                    // handle legacy hashed password from A1.
+                    if (PBKDF2.Verify(user.PasswordHash, Input.Password))
+                    {
+                        await _signInManager.SignInAsync(user, false, default);
+                        _logger.LogInformation("User logged in.");
+                        if (!string.IsNullOrEmpty(returnUrl))
+                        {
+                            return Redirect(returnUrl);
+                        }
+                        return Page();
+                    }
+                }
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
@@ -115,7 +131,7 @@ namespace A2.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt");
                     return Page();
                 }
             }

@@ -39,6 +39,7 @@ namespace A2.Data
 
             AddLoginToDatabase(context, GetJson.GetJsonByURLAsync<JsonModels.Login>(loginConnection, "").Result);
         }
+
         /// <summary>
         /// Populates database with Customers from a JsonModels customer list.
         /// </summary>
@@ -102,7 +103,6 @@ namespace A2.Data
             {
                 return;
             }
-
             foreach (var log in logins)
             {
                 context.Users.Add(new A2User()
@@ -112,7 +112,7 @@ namespace A2.Data
                     CustomerID = log.CustomerID,
                     PasswordHash = log.PasswordHash,
                     ModifyDate = DateTime.UtcNow,
-                    Status = ActiveType.Unlocked
+                    Status = ActiveType.Unlocked,
                 });
             }
             context.SaveChanges();

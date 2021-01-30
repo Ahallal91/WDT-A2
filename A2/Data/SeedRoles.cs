@@ -16,13 +16,18 @@ namespace A2.Data
                 "Customer"
             };
 
-            foreach (var role in roleList)
+            foreach (var roleItem in roleList)
             {
-                var result = roleManager.RoleExistsAsync(role).Result;
+                var result = roleManager.RoleExistsAsync(roleItem).Result;
                 if (!result)
                 {
-                    roleManager.CreateAsync(new IdentityRole(role));
-                }
+                    IdentityRole role = new IdentityRole
+                    {
+                        Name = roleItem
+                    };
+                    roleManager.CreateAsync(role);
+                };
+
             }
         }
     }
