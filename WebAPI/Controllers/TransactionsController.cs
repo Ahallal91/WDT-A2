@@ -28,7 +28,7 @@ namespace WebAPI.Controllers
         [HttpGet("{customerId}/{startDate}/{endDate}")]
         public List<Transaction> Get(int customerId, DateTime startDate, DateTime endDate)
         {
-            return _repo.GetAllByIDWithDate(customorId, startDate, endDate);
+            return _repo.GetAllByIDWithDate(customerId, startDate, endDate);
         }
     }
 }

@@ -12,10 +12,10 @@
             Customer ID: <input asp-for=@Model.CustomerID value="@Model.CustomerID" data-val-required="The CustomerID is required." />
         </p>
         <p>
-            StartDate: <input asp-for=@Model.StartDate value="@Model.StartDate" type="datetime-local" asp-format="{0:dd/MM/yyyy HH:mm}" data-val-required="The StartDate field is required." />
+            StartDate: <input asp-for=@Model.StartDate value="@Model.StartDate" type="date" asp-format="{0:dd/MM/yyyy}" data-val-required="The StartDate field is required." />
         </p>
         <p>
-            EndDate: <input asp-for=@Model.EndDate value="@Model.EndDate" type="datetime-local" asp-format="{0:dd/MM/yyyy HH:mm}" data-val-required="The EndDate field is required." />
+            EndDate: <input asp-for=@Model.EndDate value="@Model.EndDate" type="date" asp-format="{0:dd/MM/yyyy}" data-val-required="The EndDate field is required." />
         </p>
         <p>
             <input class="btn btn-primary" type="submit" value="Filter" />

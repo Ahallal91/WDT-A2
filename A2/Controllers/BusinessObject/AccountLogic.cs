@@ -29,7 +29,7 @@ namespace A2.Controllers.BusinessObject
                     AccountNumber = account.AccountNumber,
                     Amount = value,
                     Comment = "Deposit",
-                    ModifyDate = DateTime.Now
+                    ModifyDate = DateTime.UtcNow
                 });
             }
             return account;
@@ -56,7 +56,7 @@ namespace A2.Controllers.BusinessObject
                         AccountNumber = account.AccountNumber,
                         Amount = value,
                         Comment = "Withdraw",
-                        ModifyDate = DateTime.Now
+                        ModifyDate = DateTime.UtcNow
                     });
                 }
                 else
@@ -94,7 +94,7 @@ namespace A2.Controllers.BusinessObject
                         DestinationAccount = toAccountNumber.AccountNumber,
                         Amount = value,
                         Comment = comment,
-                        ModifyDate = DateTime.Now
+                        ModifyDate = DateTime.UtcNow
                     });
                     toAccountNumber.Transactions.Add(new Transaction
                     {
@@ -102,7 +102,7 @@ namespace A2.Controllers.BusinessObject
                         AccountNumber = toAccountNumber.AccountNumber,
                         Amount = value,
                         Comment = comment,
-                        ModifyDate = DateTime.Now
+                        ModifyDate = DateTime.UtcNow
                     });
                 }
                 else
@@ -180,7 +180,7 @@ namespace A2.Controllers.BusinessObject
                 AccountNumber = account.AccountNumber,
                 Amount = charge,
                 Comment = comment,
-                ModifyDate = DateTime.Now
+                ModifyDate = DateTime.UtcNow
             });
         }
 
@@ -208,7 +208,7 @@ namespace A2.Controllers.BusinessObject
                     AccountNumber = account.AccountNumber,
                     Amount = billPay.Amount,
                     Comment = "BillPay",
-                    ModifyDate = DateTime.Now
+                    ModifyDate = DateTime.UtcNow
                 });
                 CalculateNextBillPay(billPay, ref account);
                 return account;
@@ -241,7 +241,7 @@ namespace A2.Controllers.BusinessObject
                     Amount = billPay.Amount,
                     ScheduleDate = billPay.ScheduleDate.AddMonths(1),
                     Period = billPay.Period,
-                    ModifyDate = DateTime.Now,
+                    ModifyDate = DateTime.UtcNow,
                     Status = StatusType.Awaiting
                 });
             }
@@ -255,7 +255,7 @@ namespace A2.Controllers.BusinessObject
                     Amount = billPay.Amount,
                     ScheduleDate = billPay.ScheduleDate.AddMonths(3),
                     Period = billPay.Period,
-                    ModifyDate = DateTime.Now,
+                    ModifyDate = DateTime.UtcNow,
                     Status = StatusType.Awaiting
                 });
             }

@@ -31,7 +31,7 @@
                         <td>@Html.DisplayFor(x => bill.PayeeName)</td>
                         <td>@Html.DisplayFor(x => bill.PayeeID)</td>
                         <td>@Html.DisplayFor(x => bill.Amount)</td>
-                        <td>@Html.DisplayFor(x => bill.ScheduleDate)</td>
+                        <td>@bill.ScheduleDate.ToLocalTime()</td>
                         <td>@Html.DisplayFor(x => bill.Period)</td>
                         <td>@Html.DisplayFor(x => bill.Status)</td>
                         @if (bill.Status != StatusType.Complete && bill.Status != StatusType.Blocked)

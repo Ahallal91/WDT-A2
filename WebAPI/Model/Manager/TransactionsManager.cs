@@ -19,6 +19,9 @@ namespace WebAPI.Model.Manager
         {
             _context = context;
         }
+        /// <summary>
+        /// Allows 
+        /// </summary>
         public List<Transaction> GetAll()
         {
             return _context.Transactions.ToList();
@@ -40,11 +43,15 @@ namespace WebAPI.Model.Manager
             {
                 foreach (var transact in acc.TransactionAccountNumberNavigations)
                 {
-                    var date = DateTime.Parse(transact.ModifyDate.ToString());
-                    if (date.CompareTo(startDate) >= 0 && date.CompareTo(endDate) <= 0)
+                    if (DateTime.TryParse(transact.ModifyDate.ToString(), out DateTime date))
                     {
-                        returnTransactions.Add(transact);
+                        // add 1 day to end date to ensure that it includes dates selected as time not included in front-end.
+                        if (date.ToLocalTime().CompareTo(startDate) >= 0 && date.ToLocalTime().CompareTo(endDate.AddDays(1)) <= 0)
+                        {
+                            returnTransactions.Add(transact);
+                        }
                     }
+
                 }
 
             }

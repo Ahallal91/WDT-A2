@@ -14,7 +14,7 @@ namespace A2.Models
     /// this model unless the customer is updating their contact information. Therefore it makes sense to 
     /// have this class as a record rather than a normal class.
     /// </summary>
-    public class Customer
+    public record Customer
     {
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
