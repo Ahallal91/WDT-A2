@@ -1,4 +1,4 @@
-# Assignment 1 - COSC2277 - S3811836:
+# Assignment 2 - COSC2277 - S3811836 and S3775931:
 https://github.com/rmit-wdt-fs-2021/s3811836_a2
 
 ## Projects Aim
