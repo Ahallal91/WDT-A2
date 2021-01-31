@@ -20,18 +20,28 @@ namespace WebAPI.Model.Manager
             _context = context;
         }
         /// <summary>
-        /// Allows 
+        /// Allows Admin project to get all transactions of all users to display on the transactions page.
         /// </summary>
+        /// <returns>A List of Transactions of all the transactions available.</returns>
         public List<Transaction> GetAll()
         {
             return _context.Transactions.ToList();
         }
-
+        /// <summary>
+        /// Allows Admin project to get all transactions of all users to display on the transactions page by transaction id
+        /// This code was written in-case future use was needed for getting transactions by id.
+        /// </summary>
+        /// <returns>A List of Transactions that match the id passed in.</returns>
         public List<Transaction> GetAllByID(int id)
         {
             return _context.Transactions.Where(x => x.TransactionId == id).ToList();
         }
-
+        /// <summary>
+        /// Allows Admin project to get all transactions by a CustomerID and within a certain start and endDate.
+        /// This allows the filtering for transactions in the admin project to occur without much logic on the admin project side
+        /// as all filtering is done in the API.
+        /// </summary>
+        /// <returns>A List of Transactions within the specified date and that match the customer ID</returns>
         public List<Transaction> GetAllByIDWithDate(int id, DateTime startDate, DateTime endDate)
         {
             var customer = _context.Customers.Include(x => x.Accounts)
@@ -57,7 +67,11 @@ namespace WebAPI.Model.Manager
             }
             return returnTransactions;
         }
-
+        /// <summary>
+        /// Allows Admin project to update a transaction by the transaction id, not currently implemented in the project
+        /// but may be used in the future.
+        /// </summary>
+        /// <returns>the id that was updated</returns>
         public int Update(int id, Transaction transaction)
         {
             _context.Update(transaction);
