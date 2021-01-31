@@ -38,8 +38,11 @@
                 <span asp-validation-for="Input.Phone" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Input.AccountType"></label>
-                <input asp-for="Input.AccountType" class="form-control" />
+                <label asp-for="Input.AccountType" class="form-label">Please select your Account Type:</label>
+                <select class="form-select form-control" asp-for="Input.AccountType" aria-label="Default select example">
+                    <option value="S">Savings</option>
+                    <option value="C">Checking</option>
+                </select>
                 <span asp-validation-for="Input.AccountType" class="text-danger"></span>
             </div>
             <div class="form-group">

@@ -322,7 +322,7 @@ namespace A2.Controllers
         private async Task<UpdateBillPayViewModel> ReturnUpdateViewModel(int id)
         {
             var bill = await _context.BillPay.FirstOrDefaultAsync(x => x.BillPayID == id);
-            if (bill.Status == StatusType.Complete || bill == null)
+            if (bill.Status == StatusType.Complete || bill.Status == StatusType.Blocked || bill == null)
             {
                 return null;
             }
