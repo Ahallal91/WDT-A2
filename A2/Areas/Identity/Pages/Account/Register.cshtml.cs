@@ -88,7 +88,10 @@ namespace A2.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
-
+        /// <summary>
+        /// Registers a User in with the Register view and adds the initial  details to a Customer, Account and Transaction in the database.
+        /// User role is set to Customer role.
+        /// </summary>
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
@@ -121,6 +124,14 @@ namespace A2.Areas.Identity.Pages.Account
                         Balance = Input.Balance,
                         ModifyDate = DateTime.UtcNow
                     });
+                    _context.Transaction.Add(new Models.Transaction()
+                    {
+                        TransactionType = "D",
+                        AccountNumber = accountID,
+                        Amount = Input.Balance,
+                        Comment = "Initial Deposit",
+                        ModifyDate = DateTime.UtcNow
+                    });
                     _context.SaveChanges();
                     user.CustomerID = customerID;
                     await _userManager.UpdateAsync(user);
@@ -141,7 +152,10 @@ namespace A2.Areas.Identity.Pages.Account
             // If we got this far, something failed, redisplay form
             return Page();
         }
-
+        /// <summary>
+        /// Generates a random ID for the customerID that is not already present in the database.
+        /// </summary>
+        /// <returns>customerID for new user</returns>
         public async Task<int> GenerateRandomCustID()
         {
             var randomNumberGenerator = new Random();
@@ -157,6 +171,10 @@ namespace A2.Areas.Identity.Pages.Account
             }
             return num;
         }
+        /// <summary>
+        /// Generates a random ID for the accountID that is not already present in the database.
+        /// </summary>
+        /// <returns>account number for new user</returns>
         public async Task<int> GenerateRandomAccID()
         {
             var randomNumberGenerator = new Random();

@@ -78,7 +78,10 @@ namespace A2.Areas.Identity.Pages.Account
 
             ReturnUrl = returnUrl;
         }
-
+        /// <summary>
+        /// Logs a user in via usermanager, if users are a part of the old system it uses SimpleHashing to verify and login the user
+        /// rather than IdentityAPI hashing algorithm. Admin accounts are redirected to the admin project
+        /// </summary>
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
