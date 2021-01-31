@@ -20,15 +20,15 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Account> Get()
+        public List<Account> Get()
         {
-            return (IEnumerable<Account>)_repo.GetAll();
+            return _repo.GetAll();
         }
 
-        [HttpGet("{id}")]
-        public IEnumerable<Account> Get(int id)
+        [HttpGet("{customorId}")]
+        public List<Account> Get(int customorId)
         {
-            return _repo.GetAllByID(id);
+            return _repo.GetAllByID(customorId);
         }
 
         [HttpPut]

@@ -1,4 +1,5 @@
-﻿using Admin.Models;
+﻿using Admin.Filters;
+using Admin.Models;
 using Admin.Util;
 using Admin.ViewModel;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ using X.PagedList;
 namespace Admin.Controllers
 {
     [Route("Admin")]
+    [AuthorizeAdmin]
     public class TransactionController : Controller
     {
         private readonly IHttpClientFactory _clientFactory;
@@ -43,12 +45,15 @@ namespace Admin.Controllers
             {
                 return View(new TransactionViewModel()
                 {
+                    CustomerID = transactionViewModel.CustomerID,
                     Accounts = accounts,
-                    Transactions = transactions.ToPagedList((int)page, pageSize)
+                    Transactions = transactions.ToPagedList((int)page, pageSize),
+                    StartDate = transactionViewModel.StartDate,
+                    EndDate = transactionViewModel.EndDate
                 });
             }
             // filters out accounts and transactions via date.
-            var accountsChosen = accounts.FindAll(x => x.CustomerID == transactionViewModel.CustomerID);
+            var accountsChosen = await JsonByAPI.ReturnDeserialisedObject<AccountDto>(Client, $"{APIUrl.GetAccountAPI}/{transactionViewModel.CustomerID}");
 
             List<TransactionDto> transactionsChosen = new List<TransactionDto>();
             for (int i = 0; i < accountsChosen.Count; i++)

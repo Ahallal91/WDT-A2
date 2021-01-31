@@ -20,13 +20,13 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Transaction> Get()
+        public List<Transaction> Get()
         {
             return _repo.GetAll();
         }
 
         [HttpGet("{id}")]
-        public IEnumerable<Transaction> Get(int id)
+        public List<Transaction> Get(int id)
         {
             return _repo.GetAllByID(id);
         }

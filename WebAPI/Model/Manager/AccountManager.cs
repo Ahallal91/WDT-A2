@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,14 +16,22 @@ namespace WebAPI.Model.Manager
         {
             _context = context;
         }
-        public IEnumerable<Account> GetAll()
+        public List<Account> GetAll()
         {
             return _context.Accounts.ToList();
         }
 
-        public IEnumerable<Account> GetAllByID(int id)
+        public List<Account> GetAllByID(int id)
         {
-            return _context.Accounts.ToList().Where(x => x.AccountNumber == id);
+            var customer = _context.Customers.Include(x => x.Accounts)
+                .ThenInclude(x => x.TransactionAccountNumberNavigations)
+                .FirstOrDefaultAsync(x => x.CustomerId == id).Result;
+            var returnAccounts = new List<Account>();
+            foreach (var acc in customer.Accounts)
+            {
+                returnAccounts.Add(acc);
+            }
+            return returnAccounts;
         }
 
         public int Update(int id, Account account)

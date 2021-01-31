@@ -15,14 +15,14 @@ namespace WebAPI.Model.Manager
         {
             _context = context;
         }
-        public IEnumerable<BillPay> GetAll()
+        public List<BillPay> GetAll()
         {
             return _context.BillPays.ToList();
         }
 
-        public IEnumerable<BillPay> GetAllByID(int id)
+        public List<BillPay> GetAllByID(int id)
         {
-            return _context.BillPays.ToList().Where(x => x.BillPayId == id);
+            return _context.BillPays.Where(x => x.BillPayId == id).ToList(); ;
         }
 
         public int Update(int id, BillPay billPay)

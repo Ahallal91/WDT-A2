@@ -15,14 +15,15 @@ namespace WebAPI.Model.Manager
             _context = context;
         }
 
-        public IEnumerable<AspNetUser> GetAll()
+        public List<AspNetUser> GetAll()
         {
             return _context.AspNetUsers.ToList();
         }
 
-        public IEnumerable<AspNetUser> GetAllByID(int id)
+        public List<AspNetUser> GetAllByID(int id)
         {
-            return _context.AspNetUsers.ToList().Where(x => x.Id == id.ToString());
+
+            return _context.AspNetUsers.Where(x => x.Id == id.ToString()).ToList();
         }
 
         public int Update(int id, AspNetUser login)

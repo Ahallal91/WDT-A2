@@ -84,7 +84,7 @@ namespace A2.Areas.Identity.Pages.Account
             returnUrl ??= Url.Content("~/");
 
             var user = await _userManager.FindByIdAsync(Input.UserID);
-            Console.WriteLine(Input.UserID);
+
             if (user == null)
             {
                 ModelState.AddModelError(string.Empty, "Invalid login attempt1.");
@@ -99,7 +99,7 @@ namespace A2.Areas.Identity.Pages.Account
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
 
                 var result = await _signInManager.PasswordSignInAsync(Input.UserID, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-                Console.WriteLine(Input.UserID + " " + Input.Password + " " + result);
+
                 if (!result.Succeeded)
                 {
                     // handle legacy hashed password from A1.

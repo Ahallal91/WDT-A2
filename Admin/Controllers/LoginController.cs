@@ -35,8 +35,6 @@ namespace Admin.Controllers
 
             // Set admin session
             HttpContext.Session.SetString(nameof(admin.AdminID), admin.AdminID);
-            Console.WriteLine("got here2");
-            Console.WriteLine(HttpContext.Session.GetString(nameof(admin.AdminID)));
             return RedirectToAction("Index", "Home");
         }
 

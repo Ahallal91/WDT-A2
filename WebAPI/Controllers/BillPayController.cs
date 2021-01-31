@@ -20,13 +20,13 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<BillPay> Get()
+        public List<BillPay> Get()
         {
             return _repo.GetAll();
         }
 
         [HttpGet("{id}")]
-        public IEnumerable<BillPay> Get(int id)
+        public List<BillPay> Get(int id)
         {
             return _repo.GetAllByID(id);
         }

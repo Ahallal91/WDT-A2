@@ -20,13 +20,13 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<AspNetUser> Get()
+        public List<AspNetUser> Get()
         {
             return _repo.GetAll();
         }
 
         [HttpGet("{id}")]
-        public IEnumerable<AspNetUser> Get(int id)
+        public List<AspNetUser> Get(int id)
         {
             return _repo.GetAllByID(id);
         }
