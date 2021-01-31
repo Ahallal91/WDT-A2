@@ -17,7 +17,9 @@ namespace Admin.Controllers
         private readonly IHttpClientFactory _clientFactory;
         private HttpClient Client => _clientFactory.CreateClient("api");
         public CustomerAccountController(IHttpClientFactory clientFactory) => _clientFactory = clientFactory;
-
+        /// <summary>
+        /// Displays all users
+        /// </summary>
         [Route("Logins")]
         public async Task<IActionResult> Index()
         {
@@ -25,6 +27,9 @@ namespace Admin.Controllers
 
             return View(login);
         }
+        /// <summary>
+        /// Deals with locking and unlocking of user accounts. LoginStatusBackgroundService will unlock accounts after 1 minute has passed.
+        /// </summary>
         [Route("LoginEdit")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -46,6 +51,10 @@ namespace Admin.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        /// <summary>
+        /// Sets the status of a login to unlocked if it was locked or locked if it was unlocked
+        /// </summary>
+        /// <returns>The edited login</returns>
         private static LoginDto SwapLoginActionType(LoginDto login)
         {
             if (login.Status == ActiveType.Unlocked)

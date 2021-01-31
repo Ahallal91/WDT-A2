@@ -21,7 +21,12 @@ namespace Admin.Controllers
         private readonly IHttpClientFactory _clientFactory;
         private HttpClient Client => _clientFactory.CreateClient("api");
         public TransactionController(IHttpClientFactory clientFactory) => _clientFactory = clientFactory;
-
+        /// <summary>
+        /// Returns a transaction view model of all accounts and transactions in the system.
+        /// If a CustomerID is passed in, that customers accounts and transactions for those accounts
+        /// will be filtered and returned in the view. This makes use of the WebAPI methods for the Account
+        /// and Transaction filtering and initial getting.
+        /// </summary>
         [Route("Transactions")]
         public async Task<IActionResult> Index(TransactionViewModel transactionViewModel, int? page = 1)
         {

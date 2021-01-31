@@ -61,7 +61,6 @@ namespace WebAPI.Model.Manager
                             returnTransactions.Add(transact);
                         }
                     }
-
                 }
 
             }

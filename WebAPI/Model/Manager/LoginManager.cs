@@ -35,6 +35,7 @@ namespace WebAPI.Model.Manager
         /// <summary>
         /// Currently not implemented in admin project so not implemented here.
         /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
         public List<AspNetUser> GetAllByIDWithDate(int id, DateTime startDate, DateTime endDate)
         {
             throw new NotImplementedException();

@@ -23,7 +23,9 @@ namespace Admin.Controllers
         private const string adminID = "admin";
         private const string adminPW = "admin";
         public IActionResult Login() => View();
-
+        /// <summary>
+        /// Authorises admin login and gives the admin a session
+        /// </summary>
         [HttpPost]
         public IActionResult GetLogin(Administrator admin)
         {
