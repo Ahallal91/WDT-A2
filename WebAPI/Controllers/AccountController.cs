@@ -25,16 +25,10 @@ namespace WebAPI.Controllers
             return _repo.GetAll();
         }
 
-        [HttpGet("{customorId}")]
-        public List<Account> Get(int customorId)
+        [HttpGet("{customerId}")]
+        public List<Account> Get(int customerId)
         {
-            return _repo.GetAllByID(customorId);
-        }
-
-        [HttpPut]
-        public void Put([FromBody] Account account)
-        {
-            _repo.Update(account.AccountNumber, account);
+            return _repo.GetAllByID(customerId);
         }
     }
 }

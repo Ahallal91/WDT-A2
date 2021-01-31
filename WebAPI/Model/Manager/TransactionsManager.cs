@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,6 +27,28 @@ namespace WebAPI.Model.Manager
         public List<Transaction> GetAllByID(int id)
         {
             return _context.Transactions.Where(x => x.TransactionId == id).ToList();
+        }
+
+        public List<Transaction> GetAllByIDWithDate(int id, DateTime startDate, DateTime endDate)
+        {
+            var customer = _context.Customers.Include(x => x.Accounts)
+                .ThenInclude(x => x.TransactionAccountNumberNavigations)
+                .FirstOrDefaultAsync(x => x.CustomerId == id).Result;
+
+            var returnTransactions = new List<Transaction>();
+            foreach (var acc in customer.Accounts)
+            {
+                foreach (var transact in acc.TransactionAccountNumberNavigations)
+                {
+                    var date = DateTime.Parse(transact.ModifyDate.ToString());
+                    if (date.CompareTo(startDate) >= 0 && date.CompareTo(endDate) <= 0)
+                    {
+                        returnTransactions.Add(transact);
+                    }
+                }
+
+            }
+            return returnTransactions;
         }
 
         public int Update(int id, Transaction transaction)

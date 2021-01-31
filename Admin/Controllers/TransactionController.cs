@@ -52,16 +52,13 @@ namespace Admin.Controllers
                     EndDate = transactionViewModel.EndDate
                 });
             }
-            // filters out accounts and transactions via date.
-            var accountsChosen = await JsonByAPI.ReturnDeserialisedObject<AccountDto>(Client, $"{APIUrl.GetAccountAPI}/{transactionViewModel.CustomerID}");
-
-            List<TransactionDto> transactionsChosen = new List<TransactionDto>();
-            for (int i = 0; i < accountsChosen.Count; i++)
-            {
-                transactionsChosen.AddRange(transactions.FindAll(x => x.AccountNumber == accountsChosen[i].AccountNumber
-                && x.ModifyDate.CompareTo(transactionViewModel.StartDate) >= 0 &&
-                x.ModifyDate.CompareTo(transactionViewModel.EndDate) <= 0));
-            }
+            // filters out accounts and transactions via date and customerID
+            var accountsChosen = await JsonByAPI.ReturnDeserialisedObject<AccountDto>(Client,
+                $"{APIUrl.GetAccountAPI}/{transactionViewModel.CustomerID}");
+            var transactionsChosen = await JsonByAPI.ReturnDeserialisedObject<TransactionDto>(Client,
+                $"{APIUrl.GetTransactionAPI}/{transactionViewModel.CustomerID}" +
+                $"/{transactionViewModel.StartDate.ToString("yyyy-MM-dd")}/" +
+                $"{transactionViewModel.EndDate.ToString("yyyy-MM-dd")}");
 
             return View(new TransactionViewModel()
             {

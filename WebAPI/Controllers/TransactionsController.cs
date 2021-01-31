@@ -25,16 +25,10 @@ namespace WebAPI.Controllers
             return _repo.GetAll();
         }
 
-        [HttpGet("{id}")]
-        public List<Transaction> Get(int id)
+        [HttpGet("{customerId}/{startDate}/{endDate}")]
+        public List<Transaction> Get(int customerId, DateTime startDate, DateTime endDate)
         {
-            return _repo.GetAllByID(id);
-        }
-
-        [HttpPut]
-        public void Put([FromBody] Transaction transaction)
-        {
-            _repo.Update(transaction.TransactionId, transaction);
+            return _repo.GetAllByIDWithDate(customorId, startDate, endDate);
         }
     }
 }

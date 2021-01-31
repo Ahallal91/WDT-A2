@@ -26,6 +26,11 @@ namespace WebAPI.Model.Manager
             return _context.AspNetUsers.Where(x => x.Id == id.ToString()).ToList();
         }
 
+        public List<AspNetUser> GetAllByIDWithDate(int id, DateTime startDate, DateTime endDate)
+        {
+            throw new NotImplementedException();
+        }
+
         public int Update(int id, AspNetUser login)
         {
             _context.Update(login);

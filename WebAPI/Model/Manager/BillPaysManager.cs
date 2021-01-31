@@ -25,6 +25,11 @@ namespace WebAPI.Model.Manager
             return _context.BillPays.Where(x => x.BillPayId == id).ToList(); ;
         }
 
+        public List<BillPay> GetAllByIDWithDate(int id, DateTime startDate, DateTime endDate)
+        {
+            throw new NotImplementedException();
+        }
+
         public int Update(int id, BillPay billPay)
         {
             _context.Update(billPay);

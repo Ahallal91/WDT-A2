@@ -34,6 +34,11 @@ namespace WebAPI.Model.Manager
             return returnAccounts;
         }
 
+        public List<Account> GetAllByIDWithDate(int id, DateTime startDate, DateTime endDate)
+        {
+            throw new NotImplementedException();
+        }
+
         public int Update(int id, Account account)
         {
             _context.Update(account);

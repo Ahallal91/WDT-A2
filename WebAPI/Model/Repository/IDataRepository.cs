@@ -17,6 +17,7 @@ namespace WebAPI.Model.Repository
     {
         List<TEntity> GetAll();
         List<TEntity> GetAllByID(TKey id);
+        List<TEntity> GetAllByIDWithDate(TKey id, DateTime startDate, DateTime endDate);
         TKey Update(TKey id, TEntity item);
     }
 }
