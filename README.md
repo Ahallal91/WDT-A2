@@ -1,5 +1,4 @@
 # Assignment 2 - COSC2277 - S3811836 and S3775931:
-https://github.com/rmit-wdt-fs-2021/s3811836_a2
 
 ## Projects Aim
 The aim of this project was to create an Online Banking Application which allows customers to complete transactions such as Deposit,Withdraw and Transfer. Set up Bill Pays for other payments. View their transactions and edit them. The project also contains an Admin project which performs blocking of users/billpays and filters transactions and a WebAPI which is how the Admin project accesses the original database.
